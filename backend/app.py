@@ -11,7 +11,7 @@ app: Flask = Flask(__name__)
 
 
 @app.route("/")
-def index() -> dict[str, str]:
+def root() -> dict[str, str]:
     """
     Define the default (root) endpoint "/".
 
