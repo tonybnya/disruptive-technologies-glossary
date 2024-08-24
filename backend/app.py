@@ -12,17 +12,6 @@ from flask_sqlalchemy import SQLAlchemy
 db: SQLAlchemy = SQLAlchemy()
 
 
-@app.route("/")
-def root() -> dict[str, str]:
-    """
-    Define the default (root) endpoint "/".
-
-    Input:  Nothing
-    Output: a dictionary message
-    """
-    return {"message": "Welcome! This is a Glossary on AI and Blockchain"}
-
-
 def create_app() -> Flask:
     """
     Create the Flask app and return it as an object.
@@ -39,7 +28,10 @@ def create_app() -> Flask:
     # Initialize the Flask application
     db.init_app(app)
 
-    # TODO: import later on
+    # import register_routes here to avoid circular imports
+    from routes import register_routes
+
+    register_routes(app, db)
 
     migrate: Migrate = Migrate(app, db)
 
