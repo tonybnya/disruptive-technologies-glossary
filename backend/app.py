@@ -1,5 +1,5 @@
 """
-Main file of the application.
+This file creates the application.
 """
 
 from __future__ import annotations
