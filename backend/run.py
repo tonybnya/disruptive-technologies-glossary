@@ -8,6 +8,7 @@ from flask import Flask
 
 from app import create_app
 
+# Create an instance of the Flask application
 flask_app: Flask = create_app()
 
 if __name__ == "__main__":
