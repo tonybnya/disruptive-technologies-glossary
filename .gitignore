@@ -16,6 +16,8 @@ __pycache__/
 node_modules
 dist
 dist-ssr
+instance
+migrations
 *.local
 
 # Editor directories and files
