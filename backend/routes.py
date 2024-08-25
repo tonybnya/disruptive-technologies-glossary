@@ -219,3 +219,106 @@ def register_routes(app: Flask, db: SQLAlchemy):
 
         except Exception as e:
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
+
+    @app.route("/terms/<int:tid>", methods=["PUT"])
+    def update_term(
+        tid: int,
+    ) -> Tuple[Response, Union[Literal[200], Literal[400], Literal[404], Literal[500]]]:
+        """
+        Updates an existing Term by its ID.
+        PUT /terms/<int:tid>
+
+        Input:  (int) tid   | the ID of the term to update.
+                JSON body with the fields to update.
+        Output: (Response) | a JSON response with the updated Term or an error message.
+        """
+        # Get the JSON data from the request body
+        data = request.get_json()
+
+        if not data:
+            return jsonify({"error": "Invalid JSON data"}), 400
+
+        # Validate required fields
+        english_term: str = data.get("english_term")
+        french_term: str = data.get("french_term")
+
+        if english_term is not None and not isinstance(english_term, str):
+            return (
+                jsonify(
+                    {"error": "Invalid data type: English term should be a string"}
+                ),
+                400,
+            )
+        if french_term is not None and not isinstance(french_term, str):
+            return (
+                jsonify({"error": "Invalid data type: French term should be a string"}),
+                400,
+            )
+
+        try:
+            term = Term.query.get(tid)
+            if not term:
+                return jsonify({"error": f"Term with ID {tid} not found."}), 404
+
+            # Update the term fields
+            if english_term is not None:
+                term.english_term = english_term.strip()
+            if french_term is not None:
+                term.french_term = french_term.strip()
+            if "variant_en" in data:
+                term.variant_en = data.get("variant_en")
+            if "variant_fr" in data:
+                term.variant_fr = data.get("variant_fr")
+            if "synonyms_en" in data:
+                term.synonyms_en = data.get("synonyms_en")
+            if "synonyms_fr" in data:
+                term.synonyms_fr = data.get("synonyms_fr")
+            if "definition_en" in data:
+                term.definition_en = data.get("definition_en")
+            if "definition_fr" in data:
+                term.definition_fr = data.get("definition_fr")
+            if "syntactic_cooccurrence_en" in data:
+                term.syntactic_cooccurrence_en = data.get("syntactic_cooccurrence_en")
+            if "syntactic_cooccurrence_fr" in data:
+                term.syntactic_cooccurrence_fr = data.get("syntactic_cooccurrence_fr")
+            if "lexical_relations_en" in data:
+                term.lexical_relations_en = data.get("lexical_relations_en")
+            if "lexical_relations_fr" in data:
+                term.lexical_relations_fr = data.get("lexical_relations_fr")
+            if "phraseology_en" in data:
+                term.phraseology_en = data.get("phraseology_en")
+            if "phraseology_fr" in data:
+                term.phraseology_fr = data.get("phraseology_fr")
+            if "related_term_en" in data:
+                term.related_term_en = data.get("related_term_en")
+            if "related_term_fr" in data:
+                term.related_term_fr = data.get("related_term_fr")
+            if "contexts_en" in data:
+                term.contexts_en = data.get("contexts_en")
+            if "contexts_fr" in data:
+                term.contexts_fr = data.get("contexts_fr")
+            if "frequent_expression_en" in data:
+                term.frequent_expression_en = data.get("frequent_expression_en")
+            if "frequent_expression_fr" in data:
+                term.frequent_expression_fr = data.get("frequent_expression_fr")
+
+            db.session.commit()
+
+            return (
+                jsonify(
+                    {
+                        "message": "Term updated successfully!",
+                        "term_id": term.tid,
+                        "english_term": term.english_term,
+                        "french_term": term.french_term,
+                        # TODO: include other fields as needed
+                    }
+                ),
+                200,
+            )
+        except IntegrityError:
+            db.session.rollback()
+            return jsonify({"error": "Integrity error occurred."}), 400
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
