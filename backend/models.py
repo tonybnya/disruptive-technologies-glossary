@@ -50,8 +50,8 @@ class Term(db.Model):
 
     tid: int = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-    english_term: str = db.Column(db.String(255), nullable=False)
-    french_term: str = db.Column(db.String(255), nullable=False)
+    english_term: str = db.Column(db.String(255), unique=True, nullable=False)
+    french_term: str = db.Column(db.String(255), unique=True, nullable=False)
 
     variant_en: str = db.Column(db.String(255))
     variant_fr: str = db.Column(db.String(255))
@@ -79,6 +79,10 @@ class Term(db.Model):
 
     frequent_expression_en: str = db.Column(db.Text)
     frequent_expression_fr: str = db.Column(db.Text)
+
+    __table_args__ = (
+        db.UniqueConstraint("english_term", "french_term", name="unique_terms"),
+    )
 
     def __repr__(self) -> str:
         """
