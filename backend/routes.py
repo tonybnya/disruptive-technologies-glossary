@@ -4,7 +4,7 @@ This file defines the routes/endpoints for the API.
 
 from __future__ import annotations
 
-from typing import Literal, Tuple, Union
+from typing import Dict, List, Literal, Tuple, Union
 
 from flask import Flask, Response, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
@@ -124,3 +124,51 @@ def register_routes(app: Flask, db: SQLAlchemy):
             ),
             201,
         )
+
+    @app.route("/terms", methods=["GET"])
+    def get_terms() -> Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]:
+        """
+        Retrieves all Terms in the glossary database.
+        GET /terms
+
+        Input:  Nothing
+        Output: (Response) | a JSON response with all Terms or an error message.
+        """
+        try:
+            # Fetch all the records of the table 'terms' in the database
+            terms = Term.query.all()
+            if not terms:
+                return jsonify({"message": "No Terms found."}), 404
+
+            # Create a list of dictionaries representing each term
+            terms_list: List[Dict[str, Union[int, str]]] = [
+                {
+                    "term_id": term.tid,
+                    "english_term": term.english_term,
+                    "french_term": term.french_term,
+                    "variant_en": term.variant_en,
+                    "variant_fr": term.variant_fr,
+                    "synonyms_en": term.synonyms_en,
+                    "synonyms_fr": term.synonyms_fr,
+                    "definition_en": term.definition_en,
+                    "definition_fr": term.definition_fr,
+                    "syntactic_cooccurrence_en": term.syntactic_cooccurrence_en,
+                    "syntactic_cooccurrence_fr": term.syntactic_cooccurrence_fr,
+                    "lexical_relations_en": term.lexical_relations_en,
+                    "lexical_relations_fr": term.lexical_relations_fr,
+                    "phraseology_en": term.phraseology_en,
+                    "phraseology_fr": term.phraseology_fr,
+                    "related_term_en": term.related_term_en,
+                    "related_term_fr": term.related_term_fr,
+                    "contexts_en": term.contexts_en,
+                    "contexts_fr": term.contexts_fr,
+                    "frequent_expression_en": term.frequent_expression_en,
+                    "frequent_expression_fr": term.frequent_expression_fr,
+                }
+                for term in terms
+            ]
+
+            return jsonify(terms_list), 200
+
+        except Exception as e:
+            return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
