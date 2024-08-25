@@ -8,6 +8,7 @@ from typing import Dict, Literal, Tuple, Union
 
 from flask import Flask, Response, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import IntegrityError
 
 from models import Term
 
@@ -18,17 +19,21 @@ def register_routes(app: Flask, db: SQLAlchemy):
     """
 
     @app.route("/")
-    # def root() -> Dict[str, str]:
-    def root() -> str:
+    def root() -> Tuple[Response, Literal[200]]:
         """
         Define the default (root) endpoint "/".
 
         Input:  Nothing
         Output: a dictionary message
         """
-        term: Term = Term.query.all()
-        return str(term)
-        return {"message": "Welcome! This is a Glossary on AI and Blockchain"}
+        # return (
+        #     jsonify(
+        #         {"message": "Welcome! This is a LEC-Glossary API on AI and Blockchain."}
+        #     ),
+        #     200,
+        # )
+        terms: Term = Term.query.all()
+        return str(terms)
 
     @app.route("/terms", methods=["POST"])
     def create_term() -> Tuple[Response, Union[Literal[201], Literal[400]]]:
@@ -40,14 +45,34 @@ def register_routes(app: Flask, db: SQLAlchemy):
         Output: (Response) | a JSON response with the created Term or an error message.
         """
         # Get the JSON data from the request body
-        data = request.json
+        data = request.get_json()
 
+        # Validate the presence of required data
         if not data:
             return jsonify({"error": "Invalid JSON data"}), 400
 
+        english_term: str = data.get("english_term")
+        french_term: str = data.get("french_term")
+
+        if not english_term:
+            return jsonify({"error": "English Term is required."}), 400
+        if not french_term:
+            return jsonify({"error": "French Term is required."}), 400
+
+        # Validate data types of the the required fields
+        if not isinstance(english_term, str) or not isinstance(french_term, str):
+            return (
+                jsonify(
+                    {
+                        "error": "Invalid data types: English and French terms should be strings"
+                    }
+                ),
+                400,
+            )
+
         term: Term = Term(
-            english_term=data.get("english_term"),
-            french_term=data.get("french_term"),
+            english_term=english_term.strip(),
+            french_term=french_term.strip(),
             variant_en=data.get("variant_en"),
             variant_fr=data.get("variant_fr"),
             synonyms_en=data.get("synonyms_en"),
@@ -68,10 +93,23 @@ def register_routes(app: Flask, db: SQLAlchemy):
             frequent_expression_fr=data.get("frequent_expression_fr"),
         )
 
-        # Add the term to the session
-        db.session.add(term)
-        # Commit the session to save the term
-        db.session.commit()
+        try:
+            # Add the term to the session
+            db.session.add(term)
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            return (
+                jsonify(
+                    {
+                        "error": "Term with the same english_term and french_term already exists."
+                    }
+                ),
+                400,
+            )
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
         return (
             jsonify(
