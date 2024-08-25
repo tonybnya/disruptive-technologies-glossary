@@ -4,7 +4,7 @@ This file defines the routes/endpoints for the API.
 
 from __future__ import annotations
 
-from typing import Dict, Literal, Tuple, Union
+from typing import Literal, Tuple, Union
 
 from flask import Flask, Response, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
@@ -36,7 +36,9 @@ def register_routes(app: Flask, db: SQLAlchemy):
         return str(terms)
 
     @app.route("/terms", methods=["POST"])
-    def create_term() -> Tuple[Response, Union[Literal[201], Literal[400]]]:
+    def create_term() -> (
+        Tuple[Response, Union[Literal[201], Literal[400], Literal[500]]]
+    ):
         """
         Creates a new Term in the glossary database.
         POST /terms
@@ -115,7 +117,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
             jsonify(
                 {
                     "message": "Term created successfully!",
-                    "term": term.tid,
+                    "term_id": term.tid,
                     "english_term": term.english_term,
                     "french_term": term.french_term,
                 }

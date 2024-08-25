@@ -12,12 +12,13 @@ lerna-debug.log*
 venv
 
 __pycache__/
+.pytest_cache/
 
-node_modules
-dist
-dist-ssr
-instance
-migrations
+node_modules/
+dist/
+dist-ssr/
+instance/
+migrations/
 *.local
 
 # Editor directories and files
