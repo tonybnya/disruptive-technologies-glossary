@@ -172,3 +172,50 @@ def register_routes(app: Flask, db: SQLAlchemy):
 
         except Exception as e:
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
+
+    @app.route("/terms/<int:tid>", methods=["GET"])
+    def get_term(
+        tid: int,
+    ) -> Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]:
+        """
+        Retrieves a single Term by its ID.
+        GET /terms/<int:tid>
+
+        Input:  (int) tid   | the ID of the term to retrieve.
+        Output: (Response)  | a JSON response with the Term details or an error message.
+        """
+        try:
+            # Fetch the Term with the given term ID
+            term = Term.query.get(tid)
+            if not term:
+                return jsonify({"error": f"Term with ID {tid} not found."}), 404
+
+            # Create a dictionary representing the term
+            term_data: Dict[str, Union[int, str]] = {
+                "term_id": term.tid,
+                "english_term": term.english_term,
+                "french_term": term.french_term,
+                "variant_en": term.variant_en,
+                "variant_fr": term.variant_fr,
+                "synonyms_en": term.synonyms_en,
+                "synonyms_fr": term.synonyms_fr,
+                "definition_en": term.definition_en,
+                "definition_fr": term.definition_fr,
+                "syntactic_cooccurrence_en": term.syntactic_cooccurrence_en,
+                "syntactic_cooccurrence_fr": term.syntactic_cooccurrence_fr,
+                "lexical_relations_en": term.lexical_relations_en,
+                "lexical_relations_fr": term.lexical_relations_fr,
+                "phraseology_en": term.phraseology_en,
+                "phraseology_fr": term.phraseology_fr,
+                "related_term_en": term.related_term_en,
+                "related_term_fr": term.related_term_fr,
+                "contexts_en": term.contexts_en,
+                "contexts_fr": term.contexts_fr,
+                "frequent_expression_en": term.frequent_expression_en,
+                "frequent_expression_fr": term.frequent_expression_fr,
+            }
+
+            return jsonify(term_data), 200
+
+        except Exception as e:
+            return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
