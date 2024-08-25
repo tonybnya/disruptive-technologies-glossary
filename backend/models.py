@@ -2,6 +2,8 @@
 This file contains the models for the database.
 """
 
+from __future__ import annotations
+
 from app import db
 
 
@@ -85,4 +87,4 @@ class Term(db.Model):
         Input:  self (Term) | the Term instance
         Output: the string representation of the term.
         """
-        return f"<Term {self.english_term} - {self.french_term}>"
+        return f"Term ID: {self.tid} - English Term: {self.english_term} - French Term: {self.french_term}"
