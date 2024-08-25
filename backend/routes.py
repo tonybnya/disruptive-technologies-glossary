@@ -322,3 +322,28 @@ def register_routes(app: Flask, db: SQLAlchemy):
         except Exception as e:
             db.session.rollback()
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
+
+    @app.route("/terms/<int:tid>", methods=["DELETE"])
+    def delete_term(
+        tid: int,
+    ) -> Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]:
+        """
+        Deletes an existing Term by its ID.
+        DELETE /terms/<int:tid>
+
+        Input:  (int) tid   | the ID of the term to delete.
+        Output: (Response)  | a JSON response confirming deletion or an error message.
+        """
+        try:
+            term = Term.query.get(tid)
+            if not term:
+                return jsonify({"error": f"Term with ID {tid} not found."}), 404
+
+            db.session.delete(term)
+            db.session.commit()
+
+            return jsonify({"message": "Term deleted successfully!"}), 200
+
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
