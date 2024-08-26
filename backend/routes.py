@@ -242,6 +242,11 @@ def register_routes(app: Flask, db: SQLAlchemy):
         english_term: str = data.get("english_term")
         french_term: str = data.get("french_term")
 
+        if not english_term:
+            return jsonify({"error": "English Term is required."}), 400
+        if not french_term:
+            return jsonify({"error": "French Term is required."}), 400
+
         if english_term is not None and not isinstance(english_term, str):
             return (
                 jsonify(
