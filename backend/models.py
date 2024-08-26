@@ -49,7 +49,7 @@ class EnglishTerm(db.Model):
 
     # Add relationship between EnglishTerm and FrenchTerm models
     french_term_id = db.Column(
-        db.Integer, db.ForeignKey("french_terms.id"), nullable=True
+        db.Integer, db.ForeignKey("french_terms.french_term_id"), nullable=True
     )
     french_term = db.relationship("FrenchTerm", back_populates="english_term")
 
