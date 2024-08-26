@@ -47,6 +47,12 @@ class EnglishTerm(db.Model):
     # This constraint is to avoid multiple occurrences of the same English term
     __table_args__ = (db.UniqueConstraint("english_term", name="unique_terms"),)
 
+    # Add relationship between EnglishTerm and FrenchTerm models
+    french_term_id = db.Column(
+        db.Integer, db.ForeignKey("french_terms.id"), nullable=True
+    )
+    french_term = db.relationship("FrenchTerm", back_populates="english_term")
+
     def __repr__(self) -> str:
         """
         Returns a string representation of the English Term instance.
@@ -116,6 +122,11 @@ class FrenchTerm(db.Model):
 
     # This constraint is to avoid multiple occurrences of the same French term
     __table_args__ = (db.UniqueConstraint("french_term", name="unique_terms"),)
+
+    # Link FrenchTerm to the EnglishTerm model
+    english_term = db.relationship(
+        "EnglishTerm", back_populates="french_term", uselist=False
+    )
 
     def __repr__(self) -> str:
         """
