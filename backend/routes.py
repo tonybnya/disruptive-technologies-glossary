@@ -72,6 +72,8 @@ def register_routes(app: Flask, db: SQLAlchemy):
             )
 
         term: Term = Term(
+            domain=data.get("domain"),
+            subdomains=data.get("subdomains"),
             english_term=english_term.strip(),
             french_term=french_term.strip(),
             variant_en=data.get("variant_en"),
@@ -144,6 +146,8 @@ def register_routes(app: Flask, db: SQLAlchemy):
             terms_list: List[Dict[str, Union[int, str]]] = [
                 {
                     "term_id": term.tid,
+                    "domain": term.domain,
+                    "subdomains": term.subdomains,
                     "english_term": term.english_term,
                     "french_term": term.french_term,
                     "variant_en": term.variant_en,
@@ -194,6 +198,8 @@ def register_routes(app: Flask, db: SQLAlchemy):
             # Create a dictionary representing the term
             term_data: Dict[str, Union[int, str]] = {
                 "term_id": term.tid,
+                "domain": term.domain,
+                "subdomains": term.subdomains,
                 "english_term": term.english_term,
                 "french_term": term.french_term,
                 "variant_en": term.variant_en,
@@ -273,6 +279,11 @@ def register_routes(app: Flask, db: SQLAlchemy):
             if french_term is not None:
                 term.french_term = french_term.strip()
 
+            if "domain" in data:
+                term.domain = data.get("domain")
+            if "subdomains" in data:
+                term.subdomains = data.get("subdomains")
+
             if "variant_en" in data:
                 term.variant_en = data.get("variant_en")
             if "variant_fr" in data:
@@ -330,6 +341,8 @@ def register_routes(app: Flask, db: SQLAlchemy):
                     {
                         "message": "Term updated successfully!",
                         "term_id": term.tid,
+                        "domain": term.domain,
+                        "subdomains": term.subdomains,
                         "english_term": term.english_term,
                         "french_term": term.french_term,
                         "variant_en": term.variant_en,

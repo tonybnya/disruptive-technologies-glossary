@@ -15,12 +15,12 @@ class Term(db.Model):
     Each Term in the glossary is represented with both English & French equivalents.
 
     Attributes:
+        tid (int): The primary key for the term.
+
         domain (str): The domain to which all terms belong.
 
         subdomains (list): Subdomains to which the term belongs.
                            If not specified, belongs to 'Big Data', 'AI', and 'Blockchain'.
-
-        tid (int): The primary key for the term.
 
         english_term (str): The English term.
         french_term (str): The French equivalent of the English term.
@@ -119,6 +119,8 @@ class Term(db.Model):
         """
         return {
             "tid": self.tid,
+            "domain": self.domain,
+            "subdomains": self.subdomains,
             "english_term": self.english_term,
             "french_term": self.french_term,
             "variant_en": self.variant_en,
