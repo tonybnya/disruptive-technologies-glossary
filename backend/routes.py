@@ -26,14 +26,16 @@ def register_routes(app: Flask, db: SQLAlchemy):
         Input:  Nothing
         Output: a dictionary message
         """
-        # return (
-        #     jsonify(
-        #         {"message": "Welcome! This is a LEC-Glossary API on AI and Blockchain."}
-        #     ),
-        #     200,
-        # )
-        terms: Term = Term.query.all()
-        return str(terms)
+        return (
+            jsonify(
+                {
+                    "message": "Glossaire explicatif et combinatoire anglais-francais des technologies transformatrices (Big Data, IA, blockchain) | English-French Explanatory Combinatorial Glossary for Disruptive Technologies (Big Data, AI, Blockchain)."
+                }
+            ),
+            200,
+        )
+        # terms: Term = Term.query.all()
+        # return str(terms)
 
     @app.route("/terms", methods=["POST"])
     def create_term() -> (
@@ -41,7 +43,6 @@ def register_routes(app: Flask, db: SQLAlchemy):
     ):
         """
         Creates a new Term in the glossary database.
-        POST /terms
 
         Input:  Nothing
         Output: (Response) | a JSON response with the created Term or an error message.
@@ -77,22 +78,24 @@ def register_routes(app: Flask, db: SQLAlchemy):
             french_term=french_term.strip(),
             variant_en=data.get("variant_en"),
             variant_fr=data.get("variant_fr"),
-            synonyms_en=data.get("synonyms_en"),
-            synonyms_fr=data.get("synonyms_fr"),
+            near_synonym_en=data.get("near_synonym_en"),
+            near_synonym_fr=data.get("near_synonym_fr"),
             definition_en=data.get("definition_en"),
             definition_fr=data.get("definition_fr"),
             syntactic_cooccurrence_en=data.get("syntactic_cooccurrence_en"),
             syntactic_cooccurrence_fr=data.get("syntactic_cooccurrence_fr"),
             lexical_relations_en=data.get("lexical_relations_en"),
             lexical_relations_fr=data.get("lexical_relations_fr"),
-            phraseology_en=data.get("phraseology_en"),
-            phraseology_fr=data.get("phraseology_fr"),
-            related_term_en=data.get("related_term_en"),
-            related_term_fr=data.get("related_term_fr"),
-            contexts_en=data.get("contexts_en"),
-            contexts_fr=data.get("contexts_fr"),
+            note_en=data.get("note_en"),
+            note_fr=data.get("note_fr"),
+            not_to_be_confused_with_en=data.get("not_to_be_confused_with_en"),
+            not_to_be_confused_with_fr=data.get("not_to_be_confused_with_fr"),
             frequent_expression_en=data.get("frequent_expression_en"),
             frequent_expression_fr=data.get("frequent_expression_fr"),
+            phraseology_en=data.get("phraseology_en"),
+            phraseology_fr=data.get("phraseology_fr"),
+            context_en=data.get("context_en"),
+            context_fr=data.get("context_fr"),
         )
 
         try:
@@ -129,7 +132,6 @@ def register_routes(app: Flask, db: SQLAlchemy):
     def get_terms() -> Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]:
         """
         Retrieves all Terms in the glossary database.
-        GET /terms
 
         Input:  Nothing
         Output: (Response) | a JSON response with all Terms or an error message.
@@ -148,22 +150,24 @@ def register_routes(app: Flask, db: SQLAlchemy):
                     "french_term": term.french_term,
                     "variant_en": term.variant_en,
                     "variant_fr": term.variant_fr,
-                    "synonyms_en": term.synonyms_en,
-                    "synonyms_fr": term.synonyms_fr,
+                    "near_synonym_en": term.near_synonym_en,
+                    "near_synonym_fr": term.near_synonym_fr,
                     "definition_en": term.definition_en,
                     "definition_fr": term.definition_fr,
                     "syntactic_cooccurrence_en": term.syntactic_cooccurrence_en,
                     "syntactic_cooccurrence_fr": term.syntactic_cooccurrence_fr,
                     "lexical_relations_en": term.lexical_relations_en,
                     "lexical_relations_fr": term.lexical_relations_fr,
-                    "phraseology_en": term.phraseology_en,
-                    "phraseology_fr": term.phraseology_fr,
-                    "related_term_en": term.related_term_en,
-                    "related_term_fr": term.related_term_fr,
-                    "contexts_en": term.contexts_en,
-                    "contexts_fr": term.contexts_fr,
+                    "note_en": term.note_en,
+                    "note_fr": term.note_fr,
+                    "not_to_be_confused_with_en": term.not_to_be_confused_with_en,
+                    "not_to_be_confused_with_fr": term.not_to_be_confused_with_fr,
                     "frequent_expression_en": term.frequent_expression_en,
                     "frequent_expression_fr": term.frequent_expression_fr,
+                    "phraseology_en": term.phraseology_en,
+                    "phraseology_fr": term.phraseology_fr,
+                    "context_en": term.context_en,
+                    "context_fr": term.context_fr,
                 }
                 for term in terms
             ]
@@ -179,7 +183,6 @@ def register_routes(app: Flask, db: SQLAlchemy):
     ) -> Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]:
         """
         Retrieves a single Term by its ID.
-        GET /terms/<int:tid>
 
         Input:  (int) tid   | the ID of the term to retrieve.
         Output: (Response)  | a JSON response with the Term details or an error message.
@@ -197,22 +200,24 @@ def register_routes(app: Flask, db: SQLAlchemy):
                 "french_term": term.french_term,
                 "variant_en": term.variant_en,
                 "variant_fr": term.variant_fr,
-                "synonyms_en": term.synonyms_en,
-                "synonyms_fr": term.synonyms_fr,
+                "near_synonym_en": term.near_synonym_en,
+                "near_synonym_fr":en": term.near_synonym_fr,
                 "definition_en": term.definition_en,
                 "definition_fr": term.definition_fr,
                 "syntactic_cooccurrence_en": term.syntactic_cooccurrence_en,
                 "syntactic_cooccurrence_fr": term.syntactic_cooccurrence_fr,
                 "lexical_relations_en": term.lexical_relations_en,
                 "lexical_relations_fr": term.lexical_relations_fr,
-                "phraseology_en": term.phraseology_en,
-                "phraseology_fr": term.phraseology_fr,
-                "related_term_en": term.related_term_en,
-                "related_term_fr": term.related_term_fr,
-                "contexts_en": term.contexts_en,
-                "contexts_fr": term.contexts_fr,
+                "note_en": term.note_en,
+                "note_fr": term.note_fr,
+                "not_to_be_confused_with_en": term.not_to_be_confused_with_en,
+                "not_to_be_confused_with_fr": term.not_to_be_confused_with_fr,
                 "frequent_expression_en": term.frequent_expression_en,
                 "frequent_expression_fr": term.frequent_expression_fr,
+                "phraseology_en": term.phraseology_en,
+                "phraseology_fr": term.phraseology_fr,
+                "context_en": term.context_en,
+                "context_fr": term.context_fr,
             }
 
             return jsonify(term_data), 200
