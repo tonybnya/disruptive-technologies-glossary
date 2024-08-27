@@ -4,7 +4,7 @@ This file contains the models for the database.
 
 from __future__ import annotations
 
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from app import db
 
@@ -113,3 +113,36 @@ class Term(db.Model):
         Output: the string representation of the term.
         """
         return f"Term ID: {self.tid} - English Term: {self.english_term} - French Term: {self.french_term}"
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Converts models for easier JSON serialization.
+
+        Input:  model (Term) | the instance of the Term
+        Output: a dictionary representing the model
+        """
+        return {
+            "tid": self.tid,
+            "english_term": self.english_term,
+            "french_term": self.french_term,
+            "variant_en": self.variant_en,
+            "variant_fr": self.variant_fr,
+            "near_synonym_en": self.near_synonym_en,
+            "near_synonym_fr": self.near_synonym_fr,
+            "definition_en": self.definition_en,
+            "definition_fr": self.definition_fr,
+            "syntactic_cooccurrence_en": self.syntactic_cooccurrence_en,
+            "syntactic_cooccurrence_fr": self.syntactic_cooccurrence_fr,
+            "lexical_relations_en": self.lexical_relations_en,
+            "lexical_relations_fr": self.lexical_relations_fr,
+            "note_en": self.note_en,
+            "note_fr": self.note_fr,
+            "not_to_be_confused_with_en": self.not_to_be_confused_with_en,
+            "not_to_be_confused_with_fr": self.not_to_be_confused_with_fr,
+            "frequent_expression_en": self.frequent_expression_en,
+            "frequent_expression_fr": self.frequent_expression_fr,
+            "phraseology_en": self.phraseology_en,
+            "phraseology_fr": self.phraseology_fr,
+            "context_en": self.context_en,
+            "context_fr": self.context_fr,
+        }
