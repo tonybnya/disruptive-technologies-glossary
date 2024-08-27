@@ -44,14 +44,12 @@ class EnglishTerm(db.Model):
     contexts_en: str = db.Column(db.Text)
     frequent_expression_en: str = db.Column(db.Text)
 
-    # This constraint is to avoid multiple occurrences of the same English term
+    # # This constraint is to avoid multiple occurrences of the same English term
     __table_args__ = (db.UniqueConstraint("english_term", name="unique_terms"),)
 
     # Add relationship between EnglishTerm and FrenchTerm models
-    french_term_id = db.Column(
-        db.Integer, db.ForeignKey("french_terms.french_term_id"), nullable=True
-    )
-    french_term = db.relationship("FrenchTerm", back_populates="english_term")
+    french_term_id = db.Column(db.Integer, db.ForeignKey("french_terms.french_term_id"))
+    french_term = db.relationship("FrenchTerm", back_populates="english_terms")
 
     def __repr__(self) -> str:
         """
@@ -124,9 +122,7 @@ class FrenchTerm(db.Model):
     __table_args__ = (db.UniqueConstraint("french_term", name="unique_terms"),)
 
     # Link FrenchTerm to the EnglishTerm model
-    english_term = db.relationship(
-        "EnglishTerm", back_populates="french_term", uselist=False
-    )
+    english_terms = db.relationship("EnglishTerm", back_populates="french_term")
 
     def __repr__(self) -> str:
         """

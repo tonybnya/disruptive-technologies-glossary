@@ -517,3 +517,45 @@ def register_routes(app: Flask, db: SQLAlchemy):
         except Exception as e:
             db.session.rollback()
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
+
+    ##############################
+    ###                        ###
+    ### Combinaisons endpoints ###
+    ###                        ###
+    ##############################
+
+    @app.route('/terms/combined', methods=['GET'])
+    def get_combined_terms():
+        combined_terms = []
+
+        # Fetch all English terms
+        english_terms = EnglishTerm.query.all()
+
+        for english_term in english_terms:
+            # Get the related French term
+            french_term = english_term.french_term
+
+            combined_terms.append({
+                "english_term": english_term.english_term,
+                "variant_en": english_term.variant_en,
+                "synonyms_en": english_term.synonyms_en,
+                "definition_en": english_term.definition_en,
+                "syntactic_cooccurrence_en": english_term.syntactic_cooccurrence_en,
+                "lexical_relations_en": english_term.lexical_relations_en,
+                "phraseology_en": english_term.phraseology_en,
+                "related_term_en": english_term.related_term_en,
+                "contexts_en": english_term.contexts_en,
+                "frequent_expression_en": english_term.frequent_expression_en,
+                "french_term": french_term.french_term if french_term else None,
+                "variant_fr": french_term.variant_fr if french_term else None,
+                "synonyms_fr": french_term.synonyms_fr if french_term else None,
+                "definition_fr": french_term.definition_fr if french_term else None,
+                "syntactic_cooccurrence_fr": french_term.syntactic_cooccurrence_fr if french_term else None,
+                "lexical_relations_fr": french_term.lexical_relations_fr if french_term else None,
+                "phraseology_fr": french_term.phraseology_fr if french_term else None,
+                "related_term_fr": french_term.related_term_fr if french_term else None,
+                "contexts_fr": french_term.contexts_fr if french_term else None,
+                "frequent_expression_fr": french_term.frequent_expression_fr if french_term else None,
+            })
+
+        return jsonify(combined_terms)
