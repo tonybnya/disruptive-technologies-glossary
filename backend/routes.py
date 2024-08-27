@@ -34,8 +34,6 @@ def register_routes(app: Flask, db: SQLAlchemy):
             ),
             200,
         )
-        # terms: Term = Term.query.all()
-        # return str(terms)
 
     @app.route("/terms", methods=["POST"])
     def create_term() -> (
@@ -201,7 +199,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
                 "variant_en": term.variant_en,
                 "variant_fr": term.variant_fr,
                 "near_synonym_en": term.near_synonym_en,
-                "near_synonym_fr":en": term.near_synonym_fr,
+                "near_synonym_fr": term.near_synonym_fr,
                 "definition_en": term.definition_en,
                 "definition_fr": term.definition_fr,
                 "syntactic_cooccurrence_en": term.syntactic_cooccurrence_en,
@@ -231,7 +229,6 @@ def register_routes(app: Flask, db: SQLAlchemy):
     ) -> Tuple[Response, Union[Literal[200], Literal[400], Literal[404], Literal[500]]]:
         """
         Updates an existing Term by its ID.
-        PUT /terms/<int:tid>
 
         Input:  (int) tid   | the ID of the term to update.
                 JSON body with the fields to update.
@@ -275,42 +272,56 @@ def register_routes(app: Flask, db: SQLAlchemy):
                 term.english_term = english_term.strip()
             if french_term is not None:
                 term.french_term = french_term.strip()
+
             if "variant_en" in data:
                 term.variant_en = data.get("variant_en")
             if "variant_fr" in data:
                 term.variant_fr = data.get("variant_fr")
-            if "synonyms_en" in data:
-                term.synonyms_en = data.get("synonyms_en")
-            if "synonyms_fr" in data:
-                term.synonyms_fr = data.get("synonyms_fr")
+
+            if "near_synonym_en" in data:
+                term.near_synonym_en = data.get("near_synonym_en")
+            if "near_synonym_fr" in data:
+                term.near_synonym_fr = data.get("near_synonym_fr")
+
             if "definition_en" in data:
                 term.definition_en = data.get("definition_en")
             if "definition_fr" in data:
                 term.definition_fr = data.get("definition_fr")
+
             if "syntactic_cooccurrence_en" in data:
                 term.syntactic_cooccurrence_en = data.get("syntactic_cooccurrence_en")
             if "syntactic_cooccurrence_fr" in data:
                 term.syntactic_cooccurrence_fr = data.get("syntactic_cooccurrence_fr")
+
             if "lexical_relations_en" in data:
                 term.lexical_relations_en = data.get("lexical_relations_en")
             if "lexical_relations_fr" in data:
                 term.lexical_relations_fr = data.get("lexical_relations_fr")
-            if "phraseology_en" in data:
-                term.phraseology_en = data.get("phraseology_en")
-            if "phraseology_fr" in data:
-                term.phraseology_fr = data.get("phraseology_fr")
-            if "related_term_en" in data:
-                term.related_term_en = data.get("related_term_en")
-            if "related_term_fr" in data:
-                term.related_term_fr = data.get("related_term_fr")
-            if "contexts_en" in data:
-                term.contexts_en = data.get("contexts_en")
-            if "contexts_fr" in data:
-                term.contexts_fr = data.get("contexts_fr")
+
+            if "note_en" in data:
+                term.note_en = data.get("note_en")
+            if "note_fr" in data:
+                term.note_fr = data.get("note_fr")
+
+            if "not_to_be_confused_with_en" in data:
+                term.not_to_be_confused_with_en = data.get("not_to_be_confused_with_en")
+            if "not_to_be_confused_with_fr" in data:
+                term.not_to_be_confused_with_fr = data.get("not_to_be_confused_with_fr")
+
             if "frequent_expression_en" in data:
                 term.frequent_expression_en = data.get("frequent_expression_en")
             if "frequent_expression_fr" in data:
                 term.frequent_expression_fr = data.get("frequent_expression_fr")
+
+            if "phraseology_en" in data:
+                term.phraseology_en = data.get("phraseology_en")
+            if "phraseology_fr" in data:
+                term.phraseology_fr = data.get("phraseology_fr")
+
+            if "context_en" in data:
+                term.context_en = data.get("context_en")
+            if "context_fr" in data:
+                term.context_fr = data.get("context_fr")
 
             db.session.commit()
 
@@ -323,22 +334,24 @@ def register_routes(app: Flask, db: SQLAlchemy):
                         "french_term": term.french_term,
                         "variant_en": term.variant_en,
                         "variant_fr": term.variant_fr,
-                        "synonyms_en": term.synonyms_en,
-                        "synonyms_fr": term.synonyms_fr,
+                        "near_synonym_en": term.near_synonym_en,
+                        "near_synonym_fr": term.near_synonym_fr,
                         "definition_en": term.definition_en,
                         "definition_fr": term.definition_en,
                         "syntactic_cooccurrence_en": term.syntactic_cooccurrence_en,
                         "syntactic_cooccurrence_fr": term.syntactic_cooccurrence_fr,
                         "lexical_relations_en": term.lexical_relations_en,
                         "lexical_relations_fr": term.lexical_relations_fr,
-                        "phraseology_en": term.phraseology_en,
-                        "phraseology_fr": term.phraseology_fr,
-                        "related_term_en": term.related_term_en,
-                        "related_term_fr": term.related_term_fr,
-                        "contexts_en": term.contexts_en,
-                        "contexts_fr": term.contexts_fr,
+                        "note_en": term.note_en,
+                        "note_fr": term.note_fr,
+                        "not_to_be_confused_with_en": term.not_to_be_confused_with_en,
+                        "not_to_be_confused_with_fr": term.not_to_be_confused_with_fr,
                         "frequent_expression_en": term.frequent_expression_en,
                         "frequent_expression_fr": term.frequent_expression_fr,
+                        "phraseology_en": term.phraseology_en,
+                        "phraseology_fr": term.phraseology_fr,
+                        "context_en": term.context_en,
+                        "context_fr": term.context_fr,
                     }
                 ),
                 200,
@@ -356,7 +369,6 @@ def register_routes(app: Flask, db: SQLAlchemy):
     ) -> Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]:
         """
         Deletes an existing Term by its ID.
-        DELETE /terms/<int:tid>
 
         Input:  (int) tid   | the ID of the term to delete.
         Output: (Response)  | a JSON response confirming deletion or an error message.
