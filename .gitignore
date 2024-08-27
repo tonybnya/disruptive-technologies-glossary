@@ -19,6 +19,7 @@ dist/
 dist-ssr/
 instance/
 migrations/
+fiches/
 *.local
 
 # Editor directories and files
