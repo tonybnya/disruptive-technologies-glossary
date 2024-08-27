@@ -59,14 +59,10 @@ class Term(db.Model):
     # Define the name of the table in the database
     __tablename__ = "terms"
 
-    # Class attribute
-    # Each single term in the database belongs to this domain
-    domain: str = "Technologies Transformatrices"
-
-    # New class attribute for subdomains
-    subdomains: List[str] = ["Big Data", "AI", "Blockchain"]
-
     tid: int = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    domain: str = db.Column(db.String(255), nullable=False)
+    subdomains: List[str] = db.Column(db.JSON)
 
     english_term: str = db.Column(db.String(255), unique=True, nullable=False)
     french_term: str = db.Column(db.String(255), unique=True, nullable=False)
