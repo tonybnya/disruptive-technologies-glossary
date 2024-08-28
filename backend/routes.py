@@ -8,9 +8,8 @@ from typing import Dict, List, Literal, Tuple, Union
 
 from flask import Flask, Response, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.exc import IntegrityError
-
 from models import Term
+from sqlalchemy.exc import IntegrityError
 
 
 def register_routes(app: Flask, db: SQLAlchemy):
@@ -29,7 +28,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
         return (
             jsonify(
                 {
-                    "message": "Glossaire explicatif et combinatoire anglais-francais des technologies transformatrices (Big Data, IA, blockchain) | English-French Explanatory Combinatorial Glossary for Disruptive Technologies (Big Data, AI, Blockchain)."
+                    "message": "Glossaire explicatif et combinatoire anglais-francais des technologies transformatrices (Big Data, IA, blockchain) - English-French Explanatory Combinatorial Glossary for Disruptive Technologies (Big Data, AI, Blockchain)."
                 }
             ),
             200,
@@ -50,7 +49,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
 
         # Validate the presence of required data
         if not data:
-            return jsonify({"error": "Invalid JSON data"}), 400
+            return jsonify({"error": "Invalid JSON data."}), 400
 
         english_term: str = data.get("english_term")
         french_term: str = data.get("french_term")
@@ -65,7 +64,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
             return (
                 jsonify(
                     {
-                        "error": "Invalid data types: English and French terms should be strings"
+                        "error": "Invalid data types: English and French terms should be strings."
                     }
                 ),
                 400,
@@ -105,11 +104,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
         except IntegrityError:
             db.session.rollback()
             return (
-                jsonify(
-                    {
-                        "error": "Term with the same english_term and french_term already exists."
-                    }
-                ),
+                jsonify({"error": "This term already exists."}),
                 400,
             )
         except Exception as e:
