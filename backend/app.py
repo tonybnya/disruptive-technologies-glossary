@@ -33,6 +33,6 @@ def create_app() -> Flask:
 
     register_routes(app, db)
 
-    migrate: Migrate = Migrate(app, db)
+    migrate: Migrate = Migrate(app, db)  # noqa: F841
 
     return app

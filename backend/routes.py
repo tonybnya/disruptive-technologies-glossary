@@ -115,9 +115,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
             jsonify(
                 {
                     "message": "Term created successfully!",
-                    "term_id": term.tid,
-                    "english_term": term.english_term,
-                    "french_term": term.french_term,
+                    "term": term.to_dict()
                 }
             ),
             201,
@@ -138,36 +136,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
                 return jsonify({"message": "No Terms found."}), 404
 
             # Create a list of dictionaries representing each term
-            terms_list: List[Dict[str, Union[int, str]]] = [
-                {
-                    "term_id": term.tid,
-                    "domain": term.domain,
-                    "subdomains": term.subdomains,
-                    "english_term": term.english_term,
-                    "french_term": term.french_term,
-                    "variant_en": term.variant_en,
-                    "variant_fr": term.variant_fr,
-                    "near_synonym_en": term.near_synonym_en,
-                    "near_synonym_fr": term.near_synonym_fr,
-                    "definition_en": term.definition_en,
-                    "definition_fr": term.definition_fr,
-                    "syntactic_cooccurrence_en": term.syntactic_cooccurrence_en,
-                    "syntactic_cooccurrence_fr": term.syntactic_cooccurrence_fr,
-                    "lexical_relations_en": term.lexical_relations_en,
-                    "lexical_relations_fr": term.lexical_relations_fr,
-                    "note_en": term.note_en,
-                    "note_fr": term.note_fr,
-                    "not_to_be_confused_with_en": term.not_to_be_confused_with_en,
-                    "not_to_be_confused_with_fr": term.not_to_be_confused_with_fr,
-                    "frequent_expression_en": term.frequent_expression_en,
-                    "frequent_expression_fr": term.frequent_expression_fr,
-                    "phraseology_en": term.phraseology_en,
-                    "phraseology_fr": term.phraseology_fr,
-                    "context_en": term.context_en,
-                    "context_fr": term.context_fr,
-                }
-                for term in terms
-            ]
+            terms_list: List[Dict[str, Union[int, str]]] = [term.to_dict() for term in terms]
 
             return jsonify(terms_list), 200
 
@@ -190,36 +159,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
             if not term:
                 return jsonify({"error": f"Term with ID {tid} not found."}), 404
 
-            # Create a dictionary representing the term
-            term_data: Dict[str, Union[int, str]] = {
-                "term_id": term.tid,
-                "domain": term.domain,
-                "subdomains": term.subdomains,
-                "english_term": term.english_term,
-                "french_term": term.french_term,
-                "variant_en": term.variant_en,
-                "variant_fr": term.variant_fr,
-                "near_synonym_en": term.near_synonym_en,
-                "near_synonym_fr": term.near_synonym_fr,
-                "definition_en": term.definition_en,
-                "definition_fr": term.definition_fr,
-                "syntactic_cooccurrence_en": term.syntactic_cooccurrence_en,
-                "syntactic_cooccurrence_fr": term.syntactic_cooccurrence_fr,
-                "lexical_relations_en": term.lexical_relations_en,
-                "lexical_relations_fr": term.lexical_relations_fr,
-                "note_en": term.note_en,
-                "note_fr": term.note_fr,
-                "not_to_be_confused_with_en": term.not_to_be_confused_with_en,
-                "not_to_be_confused_with_fr": term.not_to_be_confused_with_fr,
-                "frequent_expression_en": term.frequent_expression_en,
-                "frequent_expression_fr": term.frequent_expression_fr,
-                "phraseology_en": term.phraseology_en,
-                "phraseology_fr": term.phraseology_fr,
-                "context_en": term.context_en,
-                "context_fr": term.context_fr,
-            }
-
-            return jsonify(term_data), 200
+            return jsonify(term.to_dict()), 200
 
         except Exception as e:
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
@@ -337,31 +277,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
                 jsonify(
                     {
                         "message": "Term updated successfully!",
-                        "term_id": term.tid,
-                        "domain": term.domain,
-                        "subdomains": term.subdomains,
-                        "english_term": term.english_term,
-                        "french_term": term.french_term,
-                        "variant_en": term.variant_en,
-                        "variant_fr": term.variant_fr,
-                        "near_synonym_en": term.near_synonym_en,
-                        "near_synonym_fr": term.near_synonym_fr,
-                        "definition_en": term.definition_en,
-                        "definition_fr": term.definition_en,
-                        "syntactic_cooccurrence_en": term.syntactic_cooccurrence_en,
-                        "syntactic_cooccurrence_fr": term.syntactic_cooccurrence_fr,
-                        "lexical_relations_en": term.lexical_relations_en,
-                        "lexical_relations_fr": term.lexical_relations_fr,
-                        "note_en": term.note_en,
-                        "note_fr": term.note_fr,
-                        "not_to_be_confused_with_en": term.not_to_be_confused_with_en,
-                        "not_to_be_confused_with_fr": term.not_to_be_confused_with_fr,
-                        "frequent_expression_en": term.frequent_expression_en,
-                        "frequent_expression_fr": term.frequent_expression_fr,
-                        "phraseology_en": term.phraseology_en,
-                        "phraseology_fr": term.phraseology_fr,
-                        "context_en": term.context_en,
-                        "context_fr": term.context_fr,
+                        "term": term.to_dict()
                     }
                 ),
                 200,
