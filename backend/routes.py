@@ -253,13 +253,15 @@ def register_routes(app: Flask, db: SQLAlchemy):
         if english_term is not None and not isinstance(english_term, str):
             return (
                 jsonify(
-                    {"error": "Invalid data type: English term should be a string"}
+                    {"error": "Invalid data type: English term should be a string."}
                 ),
                 400,
             )
         if french_term is not None and not isinstance(french_term, str):
             return (
-                jsonify({"error": "Invalid data type: French term should be a string"}),
+                jsonify(
+                    {"error": "Invalid data type: French term should be a string."}
+                ),
                 400,
             )
 
