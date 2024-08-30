@@ -6,10 +6,11 @@ from __future__ import annotations
 
 from typing import Dict, List, Literal, Tuple, Union
 
-from flask import Flask, Response, jsonify, request
+from flask import Flask, Response, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-from models import Term
 from sqlalchemy.exc import IntegrityError
+
+from models import Term
 
 
 def register_routes(app: Flask, db: SQLAlchemy):
@@ -18,6 +19,16 @@ def register_routes(app: Flask, db: SQLAlchemy):
     """
 
     @app.route("/")
+    def index() -> Tuple[Response, Literal[200]]:
+        """
+        Define the endpoint for the landing page.
+
+        Input:  Nothing
+        Output: the template of the index page.
+        """
+        return render_template("index.html")
+
+    @app.route("/api")
     def root() -> Tuple[Response, Literal[200]]:
         """
         Define the default (root) endpoint "/".
@@ -34,7 +45,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
             200,
         )
 
-    @app.route("/terms", methods=["POST"])
+    @app.route("/api/terms", methods=["POST"])
     def create_term() -> (
         Tuple[Response, Union[Literal[201], Literal[400], Literal[500]]]
     ):
@@ -112,16 +123,11 @@ def register_routes(app: Flask, db: SQLAlchemy):
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
         return (
-            jsonify(
-                {
-                    "message": "Term created successfully!",
-                    "term": term.to_dict()
-                }
-            ),
+            jsonify({"message": "Term created successfully!", "term": term.to_dict()}),
             201,
         )
 
-    @app.route("/terms", methods=["GET"])
+    @app.route("/api/terms", methods=["GET"])
     def get_terms() -> Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]:
         """
         Retrieves all Terms in the glossary database.
@@ -136,14 +142,16 @@ def register_routes(app: Flask, db: SQLAlchemy):
                 return jsonify({"message": "No Terms found."}), 404
 
             # Create a list of dictionaries representing each term
-            terms_list: List[Dict[str, Union[int, str]]] = [term.to_dict() for term in terms]
+            terms_list: List[Dict[str, Union[int, str]]] = [
+                term.to_dict() for term in terms
+            ]
 
             return jsonify(terms_list), 200
 
         except Exception as e:
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
-    @app.route("/terms/<int:tid>", methods=["GET"])
+    @app.route("/api/terms/<int:tid>", methods=["GET"])
     def get_term(
         tid: int,
     ) -> Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]:
@@ -164,7 +172,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
         except Exception as e:
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
-    @app.route("/terms/<int:tid>", methods=["PUT"])
+    @app.route("/api/terms/<int:tid>", methods=["PUT"])
     def update_term(
         tid: int,
     ) -> Tuple[Response, Union[Literal[200], Literal[400], Literal[404], Literal[500]]]:
@@ -275,10 +283,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
 
             return (
                 jsonify(
-                    {
-                        "message": "Term updated successfully!",
-                        "term": term.to_dict()
-                    }
+                    {"message": "Term updated successfully!", "term": term.to_dict()}
                 ),
                 200,
             )
@@ -289,7 +294,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
             db.session.rollback()
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
-    @app.route("/terms/<int:tid>", methods=["DELETE"])
+    @app.route("/api/terms/<int:tid>", methods=["DELETE"])
     def delete_term(
         tid: int,
     ) -> Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]:
@@ -312,3 +317,4 @@ def register_routes(app: Flask, db: SQLAlchemy):
         except Exception as e:
             db.session.rollback()
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
+
