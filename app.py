@@ -20,7 +20,12 @@ def create_app() -> Flask:
     Output: an object representing the Flask application
     """
     # Define the Flask application
-    app: Flask = Flask(__name__)
+    app: Flask = Flask(
+        __name__,
+        template_folder="templates",
+        static_folder="static",
+        static_url_path="/",
+    )
 
     # Define a string for the SQLite database
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./glossary.db"
