@@ -28,6 +28,16 @@ def register_routes(app: Flask, db: SQLAlchemy):
         """
         return render_template("index.html")
 
+    @app.route("/contacts")
+    def contacts() -> Tuple[Response, Literal[200]]:
+        """
+        Define the endpoint for the contacts page.
+
+        Input:  Nothing
+        Output: the template of the contacts page.
+        """
+        return render_template("contacts.html")
+
     @app.route("/api")
     def root() -> Tuple[Response, Literal[200]]:
         """
