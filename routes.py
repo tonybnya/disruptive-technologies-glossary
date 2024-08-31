@@ -48,6 +48,16 @@ def register_routes(app: Flask, db: SQLAlchemy):
         """
         return render_template("glossary.html")
 
+    @app.errorhandler(404)
+    def page_not_found(e):
+        """
+        Define the endpoint for the glossary page.
+
+        Input:  e   | an error
+        Output: the template of the glossary page.
+        """
+        return render_template("404.html"), 404
+
     @app.route("/api")
     def root() -> Tuple[Response, Literal[200]]:
         """

@@ -10,6 +10,10 @@ module.exports = {
       backgroundImage: {
         "home": "url('./static/img/bg-home.jpg')",
       },
+      fontFamily: {
+        inter: ['Inter', 'sans-serif'],
+        opensans: ['Open Sans', 'sans-serif'],
+      },
     },
   },
   plugins: [require("flowbite/plugin")],
