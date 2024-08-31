@@ -28,15 +28,25 @@ def register_routes(app: Flask, db: SQLAlchemy):
         """
         return render_template("index.html")
 
-    @app.route("/contacts")
-    def contacts() -> Tuple[Response, Literal[200]]:
+    @app.route("/contact")
+    def contact() -> Tuple[Response, Literal[200]]:
         """
-        Define the endpoint for the contacts page.
+        Define the endpoint for the contact page.
 
         Input:  Nothing
-        Output: the template of the contacts page.
+        Output: the template of the contact page.
         """
-        return render_template("contacts.html")
+        return render_template("contact.html")
+
+    @app.route("/glossaire")
+    def glossaire() -> Tuple[Response, Literal[200]]:
+        """
+        Define the endpoint for the glossary page.
+
+        Input:  Nothing
+        Output: the template of the glossary page.
+        """
+        return render_template("glossary.html")
 
     @app.route("/api")
     def root() -> Tuple[Response, Literal[200]]:
@@ -327,4 +337,3 @@ def register_routes(app: Flask, db: SQLAlchemy):
         except Exception as e:
             db.session.rollback()
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
-

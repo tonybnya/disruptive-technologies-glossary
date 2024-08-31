@@ -2258,6 +2258,10 @@ input:checked + .toggle-bg {
     text-align: left;
   }
 
+  .xl\:text-justify {
+    text-align: justify;
+  }
+
   .xl\:text-5xl {
     font-size: 3rem;
     line-height: 1;
