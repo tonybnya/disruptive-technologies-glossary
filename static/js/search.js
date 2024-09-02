@@ -2,7 +2,7 @@ const searchInput = document.getElementById("topbar-search");
 const searchButton = document.getElementById("search-button");
 const resultsContainer = document.getElementById("results");
 
-// searchButton.addEventListener('click', performSearch);
+searchButton.addEventListener('click', performSearch);
 searchInput.addEventListener("keypress", function (e) {
   if (e.key === "Enter") {
     performSearch();
@@ -148,15 +148,15 @@ function displayResults(results) {
 <div class="bg-white shadow-md rounded-lg mb-4 p-4 sm:p-6 h-full">
   <div class="flex flex-col items-start gap-1 mb-4">
     <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
-      Terme en Français :
+      English Term:
       <span class="text-[#A32A34]">${item.english_term}</span>
     </h3>
     <h4 class="text-gray-700">
-      Domaine :
-      <span class="text-[#296F9A]">${item.domain}</span>
+      Domain:
+      <span class="text-[#296F9A]">Disruptive Technologies</span>
     </h4>
     <h4 class="text-gray-700">
-      Sous-domaine :
+      Subdomain:
       <span class="text-[#296F9A]">${item.subdomains}</span>
     </h4>
   </div>
@@ -189,7 +189,7 @@ function displayResults(results) {
       <li class="py-3 sm:py-4">
         <div class="flex items-center space-x-4">
           <div class="flex-1 min-w-0">
-            <p class="text-sm text-gray-500">Syntaxic Cooccurrence</p>
+            <p class="text-sm text-gray-500">Syntactic Cooccurrence</p>
             <p class="text-md font-medium text-gray-900">${item.syntactic_cooccurrence_en}</p>
           </div>
         </div>
@@ -238,7 +238,7 @@ function displayResults(results) {
         <div class="flex items-center space-x-4">
           <div class="flex-1 min-w-0">
             <p class="text-sm text-gray-500">Context</p>
-            <p class="text-md font-medium text-gray-900">${item.context_n}</p>
+            <p class="text-md font-medium text-gray-900">${item.context_en}</p>
           </div>
         </div>
       </li>
