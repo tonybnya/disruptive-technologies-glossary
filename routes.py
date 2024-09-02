@@ -38,8 +38,8 @@ def register_routes(app: Flask, db: SQLAlchemy):
         """
         return render_template("contact.html")
 
-    @app.route("/glossaire")
-    def glossaire() -> Tuple[Response, Literal[200]]:
+    @app.route("/glossary")
+    def glossary() -> Tuple[Response, Literal[200]]:
         """
         Define the endpoint for the glossary page.
 
@@ -47,6 +47,16 @@ def register_routes(app: Flask, db: SQLAlchemy):
         Output: the template of the glossary page.
         """
         return render_template("glossary.html")
+
+    @app.route("/dashboard")
+    def dashboard() -> Tuple[Response, Literal[200]]:
+        """
+        Define the endpoint for the dashboard page.
+
+        Input:  Nothing
+        Output: the template of the dashboard page.
+        """
+        return render_template("dashboard.html")
 
     @app.errorhandler(404)
     def page_not_found(e):
