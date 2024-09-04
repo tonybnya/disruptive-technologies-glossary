@@ -1173,6 +1173,11 @@ input:checked + .toggle-bg {
   margin-bottom: 1.5rem;
 }
 
+.my-5 {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -1239,6 +1244,10 @@ input:checked + .toggle-bg {
 
 .mt-3 {
   margin-top: 0.75rem;
+}
+
+.mb-0 {
+  margin-bottom: 0px;
 }
 
 .block {
@@ -1966,6 +1975,10 @@ input:checked + .toggle-bg {
   padding-top: 1.5rem;
 }
 
+.pb-5 {
+  padding-bottom: 1.25rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -2526,6 +2539,14 @@ input:checked + .toggle-bg {
 
   .max-sm\:gap-2 {
     gap: 0.5rem;
+  }
+
+  .max-sm\:bg-inherit {
+    background-color: inherit;
+  }
+
+  .max-sm\:bg-transparent {
+    background-color: transparent;
   }
 
   .max-sm\:pb-1 {

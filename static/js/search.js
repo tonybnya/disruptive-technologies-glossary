@@ -1,8 +1,8 @@
-const searchInput = document.getElementById("topbar-search");
+const searchInput = document.getElementById("search-input");
 const searchButton = document.getElementById("search-button");
 const resultsContainer = document.getElementById("results");
 
-searchButton.addEventListener('click', performSearch);
+searchButton.addEventListener("click", performSearch);
 searchInput.addEventListener("keypress", function (e) {
   if (e.key === "Enter") {
     performSearch();
@@ -11,7 +11,8 @@ searchInput.addEventListener("keypress", function (e) {
 
 async function performSearch() {
   const searchTerm = searchInput.value.trim().toLowerCase();
-  if (searchTerm === "") {
+  if (!searchInput || searchTerm === "") {
+    alert("Veuillez entrer un terme pour effectuer une recherche.");
     return;
   }
 
@@ -28,17 +29,17 @@ async function performSearch() {
 
     displayResults(filteredResults);
   } catch (error) {
+    alert("Vérifiez l'orthographe du terme et Réessayez !");
     console.error("Error fetching data:", error);
-    resultsContainer.innerHTML =
-      "<p>Error fetching results. Please try again.</p>";
+    resultsContainer.innerHTML = `<p>Erreur dans l'obtention des résultats. Veuillez réessayer.</p>`;
   }
 }
 
 function displayResults(results) {
   console.log(typeof results);
   if (results.length === 0) {
-      resultsContainer.innerHTML = '<p>No results found.</p>';
-      return;
+    resultsContainer.innerHTML = "<p>No results found.</p>";
+    return;
   }
 
   resultsContainer.innerHTML = results
@@ -248,4 +249,6 @@ function displayResults(results) {
 `,
     )
     .join("");
+
+  document.getElementById("search-input").value = "";
 }

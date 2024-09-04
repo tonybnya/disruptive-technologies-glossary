@@ -5,6 +5,7 @@ This file creates the application.
 from __future__ import annotations
 
 from flask import Flask
+from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
@@ -26,6 +27,7 @@ def create_app() -> Flask:
         static_folder="static",
         static_url_path="/",
     )
+    CORS(app)
 
     # Define a string for the SQLite database
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./glossary.db"

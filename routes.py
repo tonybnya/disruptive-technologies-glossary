@@ -9,6 +9,7 @@ from typing import Dict, List, Literal, Tuple, Union
 from flask import Flask, Response, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
+from flask_cors import cross_origin
 
 from models import Term
 
@@ -167,6 +168,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
             201,
         )
 
+    @cross_origin()
     @app.route("/api/terms", methods=["GET"])
     def get_terms() -> Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]:
         """
@@ -185,8 +187,11 @@ def register_routes(app: Flask, db: SQLAlchemy):
             terms_list: List[Dict[str, Union[int, str]]] = [
                 term.to_dict() for term in terms
             ]
+            response = jsonify(terms_list)
+            # Enable Access-Control-Allow-Origin
+            response.headers.add("Access-Control-Allow-Origin", "*")
 
-            return jsonify(terms_list), 200
+            return response, 200
 
         except Exception as e:
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
