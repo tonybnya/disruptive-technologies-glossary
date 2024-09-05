@@ -123,8 +123,10 @@ def register_routes(app: Flask, db: SQLAlchemy):
             )
 
         term: Term = Term(
-            domain=data.get("domain"),
-            subdomains=data.get("subdomains"),
+            domain_en=data.get("domain_en"),
+            domain_fr=data.get("domain_fr"),
+            subdomains_en=data.get("subdomains_en"),
+            subdomains_fr=data.get("subdomains_fr"),
             english_term=english_term.strip(),
             french_term=french_term.strip(),
             variant_en=data.get("variant_en"),
@@ -168,8 +170,8 @@ def register_routes(app: Flask, db: SQLAlchemy):
             201,
         )
 
-    @cross_origin()
     @app.route("/api/terms", methods=["GET"])
+    @cross_origin()
     def get_terms() -> Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]:
         """
         Retrieves all Terms in the glossary database.
@@ -188,8 +190,6 @@ def register_routes(app: Flask, db: SQLAlchemy):
                 term.to_dict() for term in terms
             ]
             response = jsonify(terms_list)
-            # Enable Access-Control-Allow-Origin
-            response.headers.add("Access-Control-Allow-Origin", "*")
 
             return response, 200
 
@@ -197,6 +197,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
     @app.route("/api/terms/<int:tid>", methods=["GET"])
+    @cross_origin()
     def get_term(
         tid: int,
     ) -> Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]:
@@ -269,10 +270,15 @@ def register_routes(app: Flask, db: SQLAlchemy):
             if french_term is not None:
                 term.french_term = french_term.strip()
 
-            if "domain" in data:
-                term.domain = data.get("domain")
-            if "subdomains" in data:
-                term.subdomains = data.get("subdomains")
+            if "domain_en" in data:
+                term.domain_en = data.get("domain_en")
+            if "domain_fr" in data:
+                term.domain_fr = data.get("domain_fr")
+
+            if "subdomains_en" in data:
+                term.subdomains_en = data.get("subdomains_en")
+            if "subdomains_fr" in data:
+                term.subdomains_fr = data.get("subdomains_fr")
 
             if "variant_en" in data:
                 term.variant_en = data.get("variant_en")

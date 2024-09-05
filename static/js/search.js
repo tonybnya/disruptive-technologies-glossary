@@ -38,7 +38,7 @@ async function performSearch() {
 function displayResults(results) {
   console.log(typeof results);
   if (results.length === 0) {
-    resultsContainer.innerHTML = "<p>No results found.</p>";
+    resultsContainer.innerHTML = "<p>Aucun résultat trouvé.</p>";
     return;
   }
 

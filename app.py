@@ -27,13 +27,12 @@ def create_app() -> Flask:
         static_folder="static",
         static_url_path="/",
     )
-    CORS(app)
 
     # Define a string for the SQLite database
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./glossary.db"
-    # app.config["SQLALCHEMY_DATABASE_URI"] = (
-    #     "postgresql://postgres:postgres@localhost:5432/glossary"
-    # )
+
+    # Initialize CORS
+    CORS(app)
 
     # Initialize the Flask application
     db.init_app(app)

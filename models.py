@@ -17,10 +17,11 @@ class Term(db.Model):
     Attributes:
         tid (int): The primary key for the term.
 
-        domain (str): The domain to which all terms belong.
+        domain_en (str): The domain to which all English terms belong.
+        domain_fr (str): The domain to which all French terms belong.
 
-        subdomains (list): Subdomains to which the term belongs.
-                           If not specified, belongs to 'Big Data', 'AI', and 'Blockchain'.
+        subdomains_en (list): Subdomains to which the English term belongs.
+        subdomains_fr (list): Subdomains to which the French term belongs.
 
         english_term (str): The English term.
         french_term (str): The French equivalent of the English term.
@@ -37,8 +38,8 @@ class Term(db.Model):
         syntactic_cooccurrence_en (list): Syntactic cooccurrence information in English.
         syntactic_cooccurrence_fr (list): Syntactic cooccurrence information in French.
 
-        lexical_relations_en (dict): Lexical relationships in English.
-        lexical_relations_fr (dict): Lexical relationships in French.
+        lexical_relations_en (list): Lexical relationships in English.
+        lexical_relations_fr (list): Lexical relationships in French.
 
         note_en (str): Note about the term in English.
         note_fr (str): Note about the term in French.
@@ -61,8 +62,11 @@ class Term(db.Model):
 
     tid: int = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-    domain: str = db.Column(db.String(255), nullable=False)
-    subdomains: List[str] = db.Column(db.JSON)
+    domain_en: str = db.Column(db.String(255), nullable=False)
+    domain_fr: str = db.Column(db.String(255), nullable=False)
+
+    subdomains_en: List[str] = db.Column(db.JSON)
+    subdomains_fr: List[str] = db.Column(db.JSON)
 
     english_term: str = db.Column(db.String(255), unique=True, nullable=False)
     french_term: str = db.Column(db.String(255), unique=True, nullable=False)
@@ -79,14 +83,14 @@ class Term(db.Model):
     syntactic_cooccurrence_en: List[str] = db.Column(db.JSON)
     syntactic_cooccurrence_fr: List[str] = db.Column(db.JSON)
 
-    lexical_relations_en: Dict[str, List[str]] = db.Column(db.JSON)
-    lexical_relations_fr: Dict[str, List[str]] = db.Column(db.JSON)
+    lexical_relations_en: List[Dict[str, List[str]]] = db.Column(db.JSON)
+    lexical_relations_fr: List[Dict[str, List[str]]] = db.Column(db.JSON)
 
     note_en: str = db.Column(db.Text)
     note_fr: str = db.Column(db.Text)
 
-    not_to_be_confused_with_en: str = db.Column(db.String(255))
-    not_to_be_confused_with_fr: str = db.Column(db.String(255))
+    not_to_be_confused_with_en: str = db.Column(db.Text)
+    not_to_be_confused_with_fr: str = db.Column(db.Text)
 
     frequent_expression_en: str = db.Column(db.Text)
     frequent_expression_fr: str = db.Column(db.Text)
@@ -119,28 +123,43 @@ class Term(db.Model):
         """
         return {
             "tid": self.tid,
-            "domain": self.domain,
-            "subdomains": self.subdomains,
+            # separator
+            "domain_en": self.domain_en,
+            "domain_fr": self.domain_fr,
+            # separator
+            "subdomains_en": self.subdomains_en,
+            "subdomains_fr": self.subdomains_fr,
+            # separator
             "english_term": self.english_term,
             "french_term": self.french_term,
+            # separator
             "variant_en": self.variant_en,
             "variant_fr": self.variant_fr,
+            # separator
             "near_synonym_en": self.near_synonym_en,
             "near_synonym_fr": self.near_synonym_fr,
+            # separator
             "definition_en": self.definition_en,
             "definition_fr": self.definition_fr,
+            # separator
             "syntactic_cooccurrence_en": self.syntactic_cooccurrence_en,
             "syntactic_cooccurrence_fr": self.syntactic_cooccurrence_fr,
+            # separator
             "lexical_relations_en": self.lexical_relations_en,
             "lexical_relations_fr": self.lexical_relations_fr,
+            # separator
             "note_en": self.note_en,
             "note_fr": self.note_fr,
+            # separator
             "not_to_be_confused_with_en": self.not_to_be_confused_with_en,
             "not_to_be_confused_with_fr": self.not_to_be_confused_with_fr,
+            # separator
             "frequent_expression_en": self.frequent_expression_en,
             "frequent_expression_fr": self.frequent_expression_fr,
+            # separator
             "phraseology_en": self.phraseology_en,
             "phraseology_fr": self.phraseology_fr,
+            # separator
             "context_en": self.context_en,
             "context_fr": self.context_fr,
         }
