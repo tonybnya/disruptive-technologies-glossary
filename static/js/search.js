@@ -45,7 +45,7 @@ function displayResults(results) {
   resultsContainer.innerHTML = results
     .map(
       (item) => `
-<div class="bg-white shadow-md rounded-lg mb-4 p-4 sm:p-6 h-full">
+<div class="bg-white shadow-lg rounded-lg mb-4 p-4 sm:p-6 h-full">
   <div class="flex flex-col items-start gap-1 mb-4">
     <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
       Terme en Français :
@@ -53,11 +53,11 @@ function displayResults(results) {
     </h3>
     <h4 class="text-gray-700">
       Domaine :
-      <span class="text-[#296F9A]">${item.domain}</span>
+      <span class="text-[#296F9A]">${item.domain_fr}</span>
     </h4>
     <h4 class="text-gray-700">
       Sous-domaine :
-      <span class="text-[#296F9A]">${item.subdomains}</span>
+      <span class="text-[#296F9A]">${item.subdomains_fr}</span>
     </h4>
   </div>
   <div class="flow-root">
@@ -146,7 +146,7 @@ function displayResults(results) {
   </div>
 </div>
 <!---->
-<div class="bg-white shadow-md rounded-lg mb-4 p-4 sm:p-6 h-full">
+<div class="bg-white shadow-lg rounded-lg mb-4 p-4 sm:p-6 h-full">
   <div class="flex flex-col items-start gap-1 mb-4">
     <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
       English Term:
@@ -154,11 +154,11 @@ function displayResults(results) {
     </h3>
     <h4 class="text-gray-700">
       Domain:
-      <span class="text-[#296F9A]">Disruptive Technologies</span>
+      <span class="text-[#296F9A]">${item.domain_en}</span>
     </h4>
     <h4 class="text-gray-700">
       Subdomain:
-      <span class="text-[#296F9A]">${item.subdomains}</span>
+      <span class="text-[#296F9A]">${item.subdomains_en}</span>
     </h4>
   </div>
   <div class="flow-root">
