@@ -26,6 +26,9 @@ class Term(db.Model):
         english_term (str): The English term.
         french_term (str): The French equivalent of the English term.
 
+        semantic_label_en (str): Semantic Label of the term in English.
+        semantic_label_fr (str): Semantic Label (étiquette sémantique) of the term in French.
+
         variant_en (str): Variant of the term in English.
         variant_fr (str): Variant of the term in French.
 
@@ -70,6 +73,9 @@ class Term(db.Model):
 
     english_term: str = db.Column(db.String(255), unique=True, nullable=False)
     french_term: str = db.Column(db.String(255), unique=True, nullable=False)
+
+    semantic_label_en: str = db.Column(db.String(255))
+    semantic_label_fr: str = db.Column(db.String(255))
 
     variant_en: str = db.Column(db.String(255))
     variant_fr: str = db.Column(db.String(255))
@@ -132,6 +138,9 @@ class Term(db.Model):
             # separator
             "english_term": self.english_term,
             "french_term": self.french_term,
+            # separator
+            "semantic_label_en": self.semantic_label_en,
+            "semantic_label_fr": self.semantic_label_fr,
             # separator
             "variant_en": self.variant_en,
             "variant_fr": self.variant_fr,

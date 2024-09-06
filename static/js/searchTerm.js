@@ -47,52 +47,6 @@ const displayResults = (results) => {
 <div class="bg-white shadow-lg rounded-lg mb-4 p-4 sm:p-6 h-full">
   <div class="flex flex-col items-start gap-1 mb-4">
     <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
-      Terme en Français :
-      <span class="text-[#A32A34]">${item.french_term}</span>
-    </h3>
-    <h4 class="text-gray-700">
-      Domaine :
-      <span class="text-[#296F9A]">${item.domain_fr}</span>
-    </h4>
-    <h4 class="">
-      Sous-domaine :
-      ${displaySubdomains("Sous-domaine", item.subdomains_fr)}
-    </h4>
-  </div>
-  <div class="flow-root">
-    <ul role="list" class="divide-y divide-gray-200">
-      ${displayIfExists("Variante", item.variant_fr)}
-      ${displayIfExists("Synonyme", item.near_synonym_fr)}
-      ${displayIfExists("Définition", item.definition_fr)}
-      <li class="py-3 sm:py-4">
-        <div class="flex items-center space-x-4">
-          <div class="flex flex-col min-w-0">
-            <p class="text-sm text-gray-500">Cooccurrence syntaxique</p>
-            ${displayCooccurrence("Cooccurrence Syntaxique", item.syntactic_cooccurrence_fr)}
-          </div>
-        </div>
-      </li>
-      ${displayLexicalRelations("Relations lexicales", item.lexical_relations_fr)}
-      ${displayIfExists("Note", item.note_fr)}
-      ${displayIfExists("À ne pas confondre avec", item.note_to_be_confused_with_fr)}
-      ${displayIfExists("Expression fréquente", item.frequent_expression_fr)}
-      ${displayIfExists("Phraséologie", item.phraseology_fr)}
-      <li class="pt-3 sm:pt-4 pb-0">
-        <div class="flex items-center space-x-4">
-          <div class="flex-1 min-w-0">
-            <p class="text-sm text-gray-500">Contexte</p>
-            <p class="text-md font-medium text-gray-900">${item.context_fr}</p>
-          </div>
-        </div>
-      </li>
-    </ul>
-  </div>
-</div>
-<!---->
-<div class="bg-white shadow-lg rounded-lg mb-4 p-4 sm:p-6 h-full">
-  <div class="flex flex-col items-start gap-1 mb-4">
-    <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
-      English Term:
       <span class="text-[#A32A34]">${item.english_term}</span>
     </h3>
     <h4 class="text-gray-700">
@@ -127,6 +81,50 @@ const displayResults = (results) => {
           <div class="flex-1 min-w-0">
             <p class="text-sm text-gray-500">Context</p>
             <p class="text-md font-medium text-gray-900">${item.context_en}</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<!---->
+<div class="bg-white shadow-lg rounded-lg mb-4 p-4 sm:p-6 h-full">
+  <div class="flex flex-col items-start gap-1 mb-4">
+    <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
+      <span class="text-[#A32A34]">${item.french_term}</span>
+    </h3>
+    <h4 class="text-gray-700">
+      Domaine :
+      <span class="text-[#296F9A]">${item.domain_fr}</span>
+    </h4>
+    <h4 class="">
+      Sous-domaine :
+      ${displaySubdomains("Sous-domaine", item.subdomains_fr)}
+    </h4>
+  </div>
+  <div class="flow-root">
+    <ul role="list" class="divide-y divide-gray-200">
+      ${displayIfExists("Variante", item.variant_fr)}
+      ${displayIfExists("Synonyme", item.near_synonym_fr)}
+      ${displayIfExists("Définition", item.definition_fr)}
+      <li class="py-3 sm:py-4">
+        <div class="flex items-center space-x-4">
+          <div class="flex flex-col min-w-0">
+            <p class="text-sm text-gray-500">Cooccurrence syntaxique</p>
+            ${displayCooccurrence("Cooccurrence Syntaxique", item.syntactic_cooccurrence_fr)}
+          </div>
+        </div>
+      </li>
+      ${displayLexicalRelations("Relations lexicales", item.lexical_relations_fr)}
+      ${displayIfExists("Note", item.note_fr)}
+      ${displayIfExists("À ne pas confondre avec", item.note_to_be_confused_with_fr)}
+      ${displayIfExists("Expression fréquente", item.frequent_expression_fr)}
+      ${displayIfExists("Phraséologie", item.phraseology_fr)}
+      <li class="pt-3 sm:pt-4 pb-0">
+        <div class="flex items-center space-x-4">
+          <div class="flex-1 min-w-0">
+            <p class="text-sm text-gray-500">Contexte</p>
+            <p class="text-md font-medium text-gray-900">${item.context_fr}</p>
           </div>
         </div>
       </li>
@@ -206,4 +204,3 @@ const displayCooccurrence = (label, cooccurrence) => {
     })
     .join("");
 };
-
