@@ -129,6 +129,8 @@ def register_routes(app: Flask, db: SQLAlchemy):
             subdomains_fr=data.get("subdomains_fr"),
             english_term=english_term.strip(),
             french_term=french_term.strip(),
+            semantic_label_en=data.get("semantic_label_en"),
+            semantic_label_fr=data.get("semantic_label_fr"),
             variant_en=data.get("variant_en"),
             variant_fr=data.get("variant_fr"),
             near_synonym_en=data.get("near_synonym_en"),
@@ -279,6 +281,11 @@ def register_routes(app: Flask, db: SQLAlchemy):
                 term.subdomains_en = data.get("subdomains_en")
             if "subdomains_fr" in data:
                 term.subdomains_fr = data.get("subdomains_fr")
+
+            if "semantic_label_en" in data:
+                term.semantic_label_en = data.get("semantic_label_en")
+            if "semantic_label_fr" in data:
+                term.semantic_label_fr = data.get("semantic_label_fr")
 
             if "variant_en" in data:
                 term.variant_en = data.get("variant_en")
