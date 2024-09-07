@@ -5,6 +5,7 @@ This file creates the application.
 from __future__ import annotations
 
 from flask import Flask
+from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
@@ -20,13 +21,18 @@ def create_app() -> Flask:
     Output: an object representing the Flask application
     """
     # Define the Flask application
-    app: Flask = Flask(__name__)
+    app: Flask = Flask(
+        __name__,
+        template_folder="templates",
+        static_folder="static",
+        static_url_path="/",
+    )
 
     # Define a string for the SQLite database
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./glossary.db"
-    # app.config["SQLALCHEMY_DATABASE_URI"] = (
-    #     "postgresql://postgres:postgres@localhost:5432/glossary"
-    # )
+
+    # Initialize CORS
+    CORS(app)
 
     # Initialize the Flask application
     db.init_app(app)
@@ -36,6 +42,6 @@ def create_app() -> Flask:
 
     register_routes(app, db)
 
-    migrate: Migrate = Migrate(app, db)
+    migrate: Migrate = Migrate(app, db)  # noqa: F841
 
     return app

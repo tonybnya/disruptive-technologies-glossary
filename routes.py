@@ -6,10 +6,12 @@ from __future__ import annotations
 
 from typing import Dict, List, Literal, Tuple, Union
 
-from flask import Flask, Response, jsonify, request
+from flask import Flask, Response, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-from models import Term
 from sqlalchemy.exc import IntegrityError
+from flask_cors import cross_origin
+
+from models import Term
 
 
 def register_routes(app: Flask, db: SQLAlchemy):
@@ -18,6 +20,56 @@ def register_routes(app: Flask, db: SQLAlchemy):
     """
 
     @app.route("/")
+    def index() -> Tuple[Response, Literal[200]]:
+        """
+        Define the endpoint for the landing page.
+
+        Input:  Nothing
+        Output: the template of the index page.
+        """
+        return render_template("index.html")
+
+    @app.route("/contact")
+    def contact() -> Tuple[Response, Literal[200]]:
+        """
+        Define the endpoint for the contact page.
+
+        Input:  Nothing
+        Output: the template of the contact page.
+        """
+        return render_template("contact.html")
+
+    @app.route("/glossary")
+    def glossary() -> Tuple[Response, Literal[200]]:
+        """
+        Define the endpoint for the glossary page.
+
+        Input:  Nothing
+        Output: the template of the glossary page.
+        """
+        return render_template("glossary.html")
+
+    @app.route("/dashboard")
+    def dashboard() -> Tuple[Response, Literal[200]]:
+        """
+        Define the endpoint for the dashboard page.
+
+        Input:  Nothing
+        Output: the template of the dashboard page.
+        """
+        return render_template("dashboard.html")
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        """
+        Define the endpoint for the glossary page.
+
+        Input:  e   | an error
+        Output: the template of the glossary page.
+        """
+        return render_template("404.html"), 404
+
+    @app.route("/api")
     def root() -> Tuple[Response, Literal[200]]:
         """
         Define the default (root) endpoint "/".
@@ -34,7 +86,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
             200,
         )
 
-    @app.route("/terms", methods=["POST"])
+    @app.route("/api/terms", methods=["POST"])
     def create_term() -> (
         Tuple[Response, Union[Literal[201], Literal[400], Literal[500]]]
     ):
@@ -71,10 +123,14 @@ def register_routes(app: Flask, db: SQLAlchemy):
             )
 
         term: Term = Term(
-            domain=data.get("domain"),
-            subdomains=data.get("subdomains"),
+            domain_en=data.get("domain_en"),
+            domain_fr=data.get("domain_fr"),
+            subdomains_en=data.get("subdomains_en"),
+            subdomains_fr=data.get("subdomains_fr"),
             english_term=english_term.strip(),
             french_term=french_term.strip(),
+            semantic_label_en=data.get("semantic_label_en"),
+            semantic_label_fr=data.get("semantic_label_fr"),
             variant_en=data.get("variant_en"),
             variant_fr=data.get("variant_fr"),
             near_synonym_en=data.get("near_synonym_en"),
@@ -112,18 +168,12 @@ def register_routes(app: Flask, db: SQLAlchemy):
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
         return (
-            jsonify(
-                {
-                    "message": "Term created successfully!",
-                    "term_id": term.tid,
-                    "english_term": term.english_term,
-                    "french_term": term.french_term,
-                }
-            ),
+            jsonify({"message": "Term created successfully!", "term": term.to_dict()}),
             201,
         )
 
-    @app.route("/terms", methods=["GET"])
+    @app.route("/api/terms", methods=["GET"])
+    @cross_origin()
     def get_terms() -> Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]:
         """
         Retrieves all Terms in the glossary database.
@@ -139,42 +189,17 @@ def register_routes(app: Flask, db: SQLAlchemy):
 
             # Create a list of dictionaries representing each term
             terms_list: List[Dict[str, Union[int, str]]] = [
-                {
-                    "term_id": term.tid,
-                    "domain": term.domain,
-                    "subdomains": term.subdomains,
-                    "english_term": term.english_term,
-                    "french_term": term.french_term,
-                    "variant_en": term.variant_en,
-                    "variant_fr": term.variant_fr,
-                    "near_synonym_en": term.near_synonym_en,
-                    "near_synonym_fr": term.near_synonym_fr,
-                    "definition_en": term.definition_en,
-                    "definition_fr": term.definition_fr,
-                    "syntactic_cooccurrence_en": term.syntactic_cooccurrence_en,
-                    "syntactic_cooccurrence_fr": term.syntactic_cooccurrence_fr,
-                    "lexical_relations_en": term.lexical_relations_en,
-                    "lexical_relations_fr": term.lexical_relations_fr,
-                    "note_en": term.note_en,
-                    "note_fr": term.note_fr,
-                    "not_to_be_confused_with_en": term.not_to_be_confused_with_en,
-                    "not_to_be_confused_with_fr": term.not_to_be_confused_with_fr,
-                    "frequent_expression_en": term.frequent_expression_en,
-                    "frequent_expression_fr": term.frequent_expression_fr,
-                    "phraseology_en": term.phraseology_en,
-                    "phraseology_fr": term.phraseology_fr,
-                    "context_en": term.context_en,
-                    "context_fr": term.context_fr,
-                }
-                for term in terms
+                term.to_dict() for term in terms
             ]
+            response = jsonify(terms_list)
 
-            return jsonify(terms_list), 200
+            return response, 200
 
         except Exception as e:
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
-    @app.route("/terms/<int:tid>", methods=["GET"])
+    @app.route("/api/terms/<int:tid>", methods=["GET"])
+    @cross_origin()
     def get_term(
         tid: int,
     ) -> Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]:
@@ -190,41 +215,12 @@ def register_routes(app: Flask, db: SQLAlchemy):
             if not term:
                 return jsonify({"error": f"Term with ID {tid} not found."}), 404
 
-            # Create a dictionary representing the term
-            term_data: Dict[str, Union[int, str]] = {
-                "term_id": term.tid,
-                "domain": term.domain,
-                "subdomains": term.subdomains,
-                "english_term": term.english_term,
-                "french_term": term.french_term,
-                "variant_en": term.variant_en,
-                "variant_fr": term.variant_fr,
-                "near_synonym_en": term.near_synonym_en,
-                "near_synonym_fr": term.near_synonym_fr,
-                "definition_en": term.definition_en,
-                "definition_fr": term.definition_fr,
-                "syntactic_cooccurrence_en": term.syntactic_cooccurrence_en,
-                "syntactic_cooccurrence_fr": term.syntactic_cooccurrence_fr,
-                "lexical_relations_en": term.lexical_relations_en,
-                "lexical_relations_fr": term.lexical_relations_fr,
-                "note_en": term.note_en,
-                "note_fr": term.note_fr,
-                "not_to_be_confused_with_en": term.not_to_be_confused_with_en,
-                "not_to_be_confused_with_fr": term.not_to_be_confused_with_fr,
-                "frequent_expression_en": term.frequent_expression_en,
-                "frequent_expression_fr": term.frequent_expression_fr,
-                "phraseology_en": term.phraseology_en,
-                "phraseology_fr": term.phraseology_fr,
-                "context_en": term.context_en,
-                "context_fr": term.context_fr,
-            }
-
-            return jsonify(term_data), 200
+            return jsonify(term.to_dict()), 200
 
         except Exception as e:
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
-    @app.route("/terms/<int:tid>", methods=["PUT"])
+    @app.route("/api/terms/<int:tid>", methods=["PUT"])
     def update_term(
         tid: int,
     ) -> Tuple[Response, Union[Literal[200], Literal[400], Literal[404], Literal[500]]]:
@@ -276,10 +272,20 @@ def register_routes(app: Flask, db: SQLAlchemy):
             if french_term is not None:
                 term.french_term = french_term.strip()
 
-            if "domain" in data:
-                term.domain = data.get("domain")
-            if "subdomains" in data:
-                term.subdomains = data.get("subdomains")
+            if "domain_en" in data:
+                term.domain_en = data.get("domain_en")
+            if "domain_fr" in data:
+                term.domain_fr = data.get("domain_fr")
+
+            if "subdomains_en" in data:
+                term.subdomains_en = data.get("subdomains_en")
+            if "subdomains_fr" in data:
+                term.subdomains_fr = data.get("subdomains_fr")
+
+            if "semantic_label_en" in data:
+                term.semantic_label_en = data.get("semantic_label_en")
+            if "semantic_label_fr" in data:
+                term.semantic_label_fr = data.get("semantic_label_fr")
 
             if "variant_en" in data:
                 term.variant_en = data.get("variant_en")
@@ -335,34 +341,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
 
             return (
                 jsonify(
-                    {
-                        "message": "Term updated successfully!",
-                        "term_id": term.tid,
-                        "domain": term.domain,
-                        "subdomains": term.subdomains,
-                        "english_term": term.english_term,
-                        "french_term": term.french_term,
-                        "variant_en": term.variant_en,
-                        "variant_fr": term.variant_fr,
-                        "near_synonym_en": term.near_synonym_en,
-                        "near_synonym_fr": term.near_synonym_fr,
-                        "definition_en": term.definition_en,
-                        "definition_fr": term.definition_en,
-                        "syntactic_cooccurrence_en": term.syntactic_cooccurrence_en,
-                        "syntactic_cooccurrence_fr": term.syntactic_cooccurrence_fr,
-                        "lexical_relations_en": term.lexical_relations_en,
-                        "lexical_relations_fr": term.lexical_relations_fr,
-                        "note_en": term.note_en,
-                        "note_fr": term.note_fr,
-                        "not_to_be_confused_with_en": term.not_to_be_confused_with_en,
-                        "not_to_be_confused_with_fr": term.not_to_be_confused_with_fr,
-                        "frequent_expression_en": term.frequent_expression_en,
-                        "frequent_expression_fr": term.frequent_expression_fr,
-                        "phraseology_en": term.phraseology_en,
-                        "phraseology_fr": term.phraseology_fr,
-                        "context_en": term.context_en,
-                        "context_fr": term.context_fr,
-                    }
+                    {"message": "Term updated successfully!", "term": term.to_dict()}
                 ),
                 200,
             )
@@ -373,7 +352,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
             db.session.rollback()
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
-    @app.route("/terms/<int:tid>", methods=["DELETE"])
+    @app.route("/api/terms/<int:tid>", methods=["DELETE"])
     def delete_term(
         tid: int,
     ) -> Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]:
