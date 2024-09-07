@@ -192,7 +192,7 @@ const displayCooccurrence = (label, cooccurrence) => {
 const displayCooccurrenceIfExists = (label, cooccurrence) => {
   if (Array.isArray(cooccurrence) && cooccurrence.length > 0) {
     const formattedItems = cooccurrence
-      .map(item => `<span class="mb-0 text-sm">${item || "<br />"}</span>`)
+      .map((item) => `<span class="mb-0 text-sm">${item || "<br />"}</span>`)
       .join("");
 
     return `
