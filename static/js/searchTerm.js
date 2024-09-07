@@ -44,14 +44,17 @@ const displayResults = (results) => {
   resultsContainer.innerHTML = results
     .map(
       (item) => `
-<div class="bg-white shadow-lg rounded-lg mb-4 p-4 sm:p-6 h-full">
+<div class="bg-white shadow-lg rounded-lg mb-4 p-4 sm:p-6 h-full max-w-full">
   <div class="flex flex-col items-start gap-1 mb-4">
     <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
-      <span class="text-[#A32A34]">${item.english_term}</span>
+      <span class="text-[#A32A34] font-bold">${item.english_term}</span>
     </h3>
     <h4 class="text-gray-700">
+      <span class="text-[#296F9A] font-bold">SL</span>: ${item.semantic_label_en}
+    </h4>
+    <h4 class="text-gray-700">
       Domain:
-      <span class="text-[#296F9A]">${item.domain_en}</span>
+      <span class="text-[#296F9A] font-bold">${item.domain_en}</span>
     </h4>
     <h4 class="text-gray-700">
       Subdomain:
@@ -63,15 +66,15 @@ const displayResults = (results) => {
       ${displayIfExists("Variant", item.variant_en)}
       ${displayIfExists("Synonym", item.near_synonym_en)}
       ${displayIfExists("Definition", item.definition_en)}
+      ${displayCooccurrenceIfExists("Syntactic Cooccurrence", item.syntactic_cooccurrence_en)}
       <li class="py-3 sm:py-4">
         <div class="flex items-center space-x-4">
-          <div class="flex flex-col min-w-0">
-            <p class="text-sm text-gray-500">Syntactic Cooccurrence</p>
-            ${displayCooccurrence("Syntactic Cooccurrence", item.syntactic_cooccurrence_en)}
+          <div class="flex-1 min-w-0">
+            <p class="text-lg text-[#296F9A] font-bold">Lexical Relations</p>
+            ${displayLexicalRelations(item.lexical_relations_en)}
           </div>
         </div>
       </li>
-      ${displayLexicalRelations("Lexical Relations", item.lexical_relations_en)}
       ${displayIfExists("Note", item.note_en)}
       ${displayIfExists("Not to be confused with", item.note_to_be_confused_with_en)}
       ${displayIfExists("Frequent expression", item.frequent_expression_en)}
@@ -79,7 +82,7 @@ const displayResults = (results) => {
       <li class="pt-3 sm:pt-4 pb-0">
         <div class="flex items-center space-x-4">
           <div class="flex-1 min-w-0">
-            <p class="text-sm text-gray-500">Context</p>
+            <p class="text-lg text-[#296F9A] font-bold">Context</p>
             <p class="text-md font-medium text-gray-900">${item.context_en}</p>
           </div>
         </div>
@@ -91,11 +94,14 @@ const displayResults = (results) => {
 <div class="bg-white shadow-lg rounded-lg mb-4 p-4 sm:p-6 h-full">
   <div class="flex flex-col items-start gap-1 mb-4">
     <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
-      <span class="text-[#A32A34]">${item.french_term}</span>
+      <span class="text-[#A32A34] font-bold">${item.french_term}</span>
     </h3>
     <h4 class="text-gray-700">
+      <span class="text-[#296F9A] font-bold">ES</span>: ${item.semantic_label_fr}
+    </h4>
+    <h4 class="text-gray-700">
       Domaine :
-      <span class="text-[#296F9A]">${item.domain_fr}</span>
+      <span class="text-[#296F9A] font-bold">${item.domain_fr}</span>
     </h4>
     <h4 class="">
       Sous-domaine :
@@ -107,15 +113,15 @@ const displayResults = (results) => {
       ${displayIfExists("Variante", item.variant_fr)}
       ${displayIfExists("Synonyme", item.near_synonym_fr)}
       ${displayIfExists("Définition", item.definition_fr)}
+      ${displayCooccurrenceIfExists("Cooccurrence Syntaxique", item.syntactic_cooccurrence_fr)}
       <li class="py-3 sm:py-4">
         <div class="flex items-center space-x-4">
-          <div class="flex flex-col min-w-0">
-            <p class="text-sm text-gray-500">Cooccurrence syntaxique</p>
-            ${displayCooccurrence("Cooccurrence Syntaxique", item.syntactic_cooccurrence_fr)}
+          <div class="flex-1 min-w-0">
+            <p class="text-lg text-[#296F9A] font-bold">Relations lexicales</p>
+            ${displayLexicalRelations(item.lexical_relations_fr)}
           </div>
         </div>
       </li>
-      ${displayLexicalRelations("Relations lexicales", item.lexical_relations_fr)}
       ${displayIfExists("Note", item.note_fr)}
       ${displayIfExists("À ne pas confondre avec", item.note_to_be_confused_with_fr)}
       ${displayIfExists("Expression fréquente", item.frequent_expression_fr)}
@@ -123,7 +129,7 @@ const displayResults = (results) => {
       <li class="pt-3 sm:pt-4 pb-0">
         <div class="flex items-center space-x-4">
           <div class="flex-1 min-w-0">
-            <p class="text-sm text-gray-500">Contexte</p>
+            <p class="text-lg text-[#296F9A] font-bold">Contexte</p>
             <p class="text-md font-medium text-gray-900">${item.context_fr}</p>
           </div>
         </div>
@@ -144,38 +150,11 @@ const displayIfExists = (label, value) => {
       <li class="py-3 sm:py-4">
         <div class="flex items-center space-x-4">
           <div class="flex-1 min-w-0">
-            <p class="text-sm text-gray-500">${label}</p>
-            <p class="text-md font-medium text-gray-900">${value}</p>
+            <p class="text-lg text-[#296F9A] font-bold">${label}</p>
+            <p class="text-sm font-medium text-gray-900">${value}</p>
           </div>
         </div>
       </li>`;
-  }
-  return "";
-};
-
-const displayLexicalRelations = (label, relations) => {
-  if (Array.isArray(relations) && relations.length > 0) {
-    return relations
-      .map((relation) =>
-        Object.keys(relation)
-          .map((key) => {
-            // console.log(`Relation key: ${key}, values: ${relation[key]}`);
-            if (Array.isArray(relation[key])) {
-              return `
-                <li class="py-3 sm:py-4">
-                  <div class="flex items-center space-x-4">
-                    <div class="flex-1 min-w-0">
-                      <p class="text-sm text-gray-500">${label} (${key})</p>
-                      <p class="text-md font-medium text-gray-900">${relation[key].join(", ")}</p>
-                    </div>
-                  </div>
-                </li>`;
-            }
-            return "";
-          })
-          .join(""),
-      )
-      .join("");
   }
   return "";
 };
@@ -198,9 +177,59 @@ const displaySubdomains = (label, subdomains) => {
 };
 
 const displayCooccurrence = (label, cooccurrence) => {
-  return cooccurrence
-    .map((item, index) => {
-      return `<span class="mb-0">${item || "<br />"}</span>`;
-    })
-    .join("");
+  if (Array.isArray(cooccurrence) && cooccurrence.length > 0) {
+    return cooccurrence
+      .map((item, index) => {
+        return `
+      <span class="mb-0 text-sm">${item || "<br />"}</span>
+      `;
+      })
+      .join("");
+  }
+  return "";
+};
+
+const displayCooccurrenceIfExists = (label, cooccurrence) => {
+  if (Array.isArray(cooccurrence) && cooccurrence.length > 0) {
+    const formattedItems = cooccurrence
+      .map(item => `<span class="mb-0 text-sm">${item || "<br />"}</span>`)
+      .join("");
+
+    return `
+      <li class="py-3 sm:py-4">
+        <div class="flex items-center space-x-4">
+          <div class="flex flex-col min-w-0">
+            <p class="text-lg text-[#296F9A] font-bold">${label}</p>
+            ${formattedItems}
+          </div>
+        </div>
+      </li>
+    `;
+  }
+  return "";
+};
+
+const displayLexicalRelations = (lexicalRelations) => {
+  let html =
+    '<table class="table-auto text-sm w-full text-left whitespace-normal">';
+
+  lexicalRelations.forEach((relation) => {
+    const key = Object.keys(relation)[0];
+    const values = relation[key];
+    html += `<tr>`;
+    html += `<th class="pl-0 py-2 font-bold">${key}</th>`;
+    html += `<td class="pl-0 py-2 text-sm">`;
+    if (Array.isArray(values)) {
+      html += values.join("<br>");
+    } else if (values) {
+      html += values;
+    } else {
+      html += "";
+    }
+    html += `</td>`;
+    html += `</tr>`;
+  });
+
+  html += "</table>";
+  return html;
 };
