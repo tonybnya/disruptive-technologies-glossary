@@ -76,8 +76,8 @@ const displayResults = (results) => {
         </div>
       </li>
       ${displayIfExists("Note", item.note_en)}
-      ${displayIfExists("Not to be confused with", item.note_to_be_confused_with_en)}
-      ${displayIfExists("Frequent expression", item.frequent_expression_en)}
+      ${displayField("Not to be confused with", item.note_to_be_confused_with_en)}
+      ${displayField("Frequent expression", item.frequent_expression_en)}
       ${displayIfExists("Phraseology", item.phraseology_en)}
       <li class="pt-3 sm:pt-4 pb-0">
         <div class="flex items-center space-x-4">
@@ -123,8 +123,8 @@ const displayResults = (results) => {
         </div>
       </li>
       ${displayIfExists("Note", item.note_fr)}
-      ${displayIfExists("À ne pas confondre avec", item.note_to_be_confused_with_fr)}
-      ${displayIfExists("Expression fréquente", item.frequent_expression_fr)}
+      ${displayField("À ne pas confondre avec", item.note_to_be_confused_with_fr)}
+      ${displayField("Expression fréquente", item.frequent_expression_fr)}
       ${displayIfExists("Phraséologie", item.phraseology_fr)}
       <li class="pt-3 sm:pt-4 pb-0">
         <div class="flex items-center space-x-4">
@@ -176,22 +176,29 @@ const displaySubdomains = (label, subdomains) => {
     .join("");
 };
 
-const displayCooccurrence = (label, cooccurrence) => {
+const displayCooccurrenceIfExists = (label, cooccurrence) => {
   if (Array.isArray(cooccurrence) && cooccurrence.length > 0) {
-    return cooccurrence
-      .map((item, index) => {
-        return `
-      <span class="mb-0 text-sm">${item || "<br />"}</span>
-      `;
-      })
+    const formattedItems = cooccurrence
+      .map((item) => `<span class="mb-0 text-sm">${item || "<br />"}</span>`)
       .join("");
+
+    return `
+      <li class="py-3 sm:py-4">
+        <div class="flex items-center space-x-4">
+          <div class="flex flex-col min-w-0">
+            <p class="text-lg text-[#296F9A] font-bold">${label}</p>
+            ${formattedItems}
+          </div>
+        </div>
+      </li>
+    `;
   }
   return "";
 };
 
-const displayCooccurrenceIfExists = (label, cooccurrence) => {
-  if (Array.isArray(cooccurrence) && cooccurrence.length > 0) {
-    const formattedItems = cooccurrence
+const displayField = (label, field) => {
+  if (Array.isArray(field) && field.length > 0) {
+    const formattedItems = field
       .map((item) => `<span class="mb-0 text-sm">${item || "<br />"}</span>`)
       .join("");
 

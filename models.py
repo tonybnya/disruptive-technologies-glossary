@@ -47,11 +47,11 @@ class Term(db.Model):
         note_en (str): Note about the term in English.
         note_fr (str): Note about the term in French.
 
-        not_to_be_confused_with_en (str): expression not to be confused with the term in English.
-        not_to_be_confused_with_fr (str): expression not to be confused with the term in French.
+        not_to_be_confused_with_en (list): expression not to be confused with the term in English.
+        not_to_be_confused_with_fr (list): expression not to be confused with the term in French.
 
-        frequent_expression_en (str): Frequent expressions in English.
-        frequent_expression_fr (str): Frequent expressions in French.
+        frequent_expression_en (list): Frequent expressions in English.
+        frequent_expression_fr (list): Frequent expressions in French.
 
         phraseology_en (str): Phraseology information in English.
         phraseology_fr (str): Phraseology information in French.
@@ -95,11 +95,11 @@ class Term(db.Model):
     note_en: str = db.Column(db.Text)
     note_fr: str = db.Column(db.Text)
 
-    not_to_be_confused_with_en: str = db.Column(db.Text)
-    not_to_be_confused_with_fr: str = db.Column(db.Text)
+    not_to_be_confused_with_en: List[str] = db.Column(db.JSON)
+    not_to_be_confused_with_fr: List[str] = db.Column(db.JSON)
 
-    frequent_expression_en: str = db.Column(db.Text)
-    frequent_expression_fr: str = db.Column(db.Text)
+    frequent_expression_en: List[str] = db.Column(db.JSON)
+    frequent_expression_fr: List[str] = db.Column(db.JSON)
 
     phraseology_en: str = db.Column(db.Text)
     phraseology_fr: str = db.Column(db.Text)
