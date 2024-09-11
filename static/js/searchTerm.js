@@ -1,6 +1,8 @@
 const searchInput = document.getElementById("search-input");
 const searchButton = document.getElementById("search-button");
 const resultsContainer = document.getElementById("results");
+// const API_URL = "http://127.0.0.1:5003/api/terms";
+const API_URL = "http://127.0.0.1:5003/api/terms/search";
 
 const performSearch = async () => {
   const searchTerm = searchInput.value.trim().toLowerCase();
@@ -10,10 +12,21 @@ const performSearch = async () => {
   }
 
   try {
-    const response = await fetch("http://127.0.0.1:5003/api/terms");
-    const data = await response.json();
-    // console.log(data);
+    // const response = await fetch(API_URL, {
+    const response = await fetch(`${API_URL}?term=${searchTerm}`, {
+      headers: {
+        accept: "application/json",
+      },
+    });
 
+    if (!response.ok) {
+      throw new Error("Quelque chose n'a pas marché");
+    }
+
+    const data = await response.json();
+    console.log(data);
+
+    // const filteredResults = termsData.filter(
     const filteredResults = data.filter(
       (item) =>
         item.french_term.toLowerCase().includes(searchTerm) ||
@@ -24,7 +37,7 @@ const performSearch = async () => {
   } catch (error) {
     alert("Vérifiez l'orthographe du terme et Réessayez !");
     console.error("Error fetching data:", error);
-    resultsContainer.innerHTML = `<p>Erreur dans l'obtention des résultats. Veuillez réessayer.</p>`;
+    resultsContainer.innerHTML = `<p>Erreur. Veuillez réessayer.</p>`;
   }
 };
 
@@ -66,7 +79,7 @@ const displayResults = (results) => {
       ${displayIfExists("Variant", item.variant_en)}
       ${displayIfExists("Synonym", item.near_synonym_en)}
       ${displayIfExists("Definition", item.definition_en)}
-      ${displayCooccurrenceIfExists("Syntactic Cooccurrence", item.syntactic_cooccurrence_en)}
+      ${displayField("Syntactic Cooccurrence", item.syntactic_cooccurrence_en)}
       <li class="py-3 sm:py-4">
         <div class="flex items-center space-x-4">
           <div class="flex-1 min-w-0">
@@ -77,7 +90,7 @@ const displayResults = (results) => {
       </li>
       ${displayIfExists("Note", item.note_en)}
       ${displayField("Not to be confused with", item.note_to_be_confused_with_en)}
-      ${displayField("Frequent expression", item.frequent_expression_en)}
+      ${displayField("Frequent Expression", item.frequent_expression_en)}
       ${displayIfExists("Phraseology", item.phraseology_en)}
       <li class="pt-3 sm:pt-4 pb-0">
         <div class="flex items-center space-x-4">
@@ -113,7 +126,7 @@ const displayResults = (results) => {
       ${displayIfExists("Variante", item.variant_fr)}
       ${displayIfExists("Synonyme", item.near_synonym_fr)}
       ${displayIfExists("Définition", item.definition_fr)}
-      ${displayCooccurrenceIfExists("Cooccurrence Syntaxique", item.syntactic_cooccurrence_fr)}
+      ${displayField("Cooccurrence Syntaxique", item.syntactic_cooccurrence_fr)}
       <li class="py-3 sm:py-4">
         <div class="flex items-center space-x-4">
           <div class="flex-1 min-w-0">
@@ -144,21 +157,6 @@ const displayResults = (results) => {
   document.getElementById("search-input").value = "";
 };
 
-const displayIfExists = (label, value) => {
-  if (value && value.trim() !== "") {
-    return `
-      <li class="py-3 sm:py-4">
-        <div class="flex items-center space-x-4">
-          <div class="flex-1 min-w-0">
-            <p class="text-lg text-[#296F9A] font-bold">${label}</p>
-            <p class="text-sm font-medium text-gray-900">${value}</p>
-          </div>
-        </div>
-      </li>`;
-  }
-  return "";
-};
-
 const displaySubdomains = (label, subdomains) => {
   const colors = [
     { text: "text-white", bg: "bg-[#296F9A]" },
@@ -176,9 +174,24 @@ const displaySubdomains = (label, subdomains) => {
     .join("");
 };
 
-const displayCooccurrenceIfExists = (label, cooccurrence) => {
-  if (Array.isArray(cooccurrence) && cooccurrence.length > 0) {
-    const formattedItems = cooccurrence
+const displayIfExists = (label, value) => {
+  if (value && value.trim() !== "") {
+    return `
+      <li class="py-3 sm:py-4">
+        <div class="flex items-center space-x-4">
+          <div class="flex-1 min-w-0">
+            <p class="text-lg text-[#296F9A] font-bold">${label}</p>
+            <p class="text-sm font-medium text-gray-900">${value}</p>
+          </div>
+        </div>
+      </li>`;
+  }
+  return "";
+};
+
+const displayField = (label, field) => {
+  if (Array.isArray(field) && field.length > 0) {
+    const formattedItems = field
       .map((item) => `<span class="mb-0 text-sm">${item || "<br />"}</span>`)
       .join("");
 
@@ -196,9 +209,9 @@ const displayCooccurrenceIfExists = (label, cooccurrence) => {
   return "";
 };
 
-const displayField = (label, field) => {
-  if (Array.isArray(field) && field.length > 0) {
-    const formattedItems = field
+const displayCooccurrenceIfExists = (label, cooccurrence) => {
+  if (Array.isArray(cooccurrence) && cooccurrence.length > 0) {
+    const formattedItems = cooccurrence
       .map((item) => `<span class="mb-0 text-sm">${item || "<br />"}</span>`)
       .join("");
 

@@ -4,12 +4,12 @@ This file defines the routes/endpoints for the API.
 
 from __future__ import annotations
 
-from typing import Dict, List, Literal, Tuple, Union
+from typing import Any, Dict, List, Literal, Tuple, Union
 
 from flask import Flask, Response, jsonify, render_template, request
+from flask_cors import cross_origin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
-from flask_cors import cross_origin
 
 from models import Term
 
@@ -47,7 +47,9 @@ def register_routes(app: Flask, db: SQLAlchemy):
         Input:  Nothing
         Output: the template of the glossary page.
         """
-        return render_template("glossary.html")
+        data = Term.query.all()
+        terms = [term.to_dict() for term in data]
+        return render_template("glossary.html", terms=terms)
 
     @app.route("/dashboard")
     def dashboard() -> Tuple[Response, Literal[200]]:
@@ -188,12 +190,9 @@ def register_routes(app: Flask, db: SQLAlchemy):
                 return jsonify({"message": "No Terms found."}), 404
 
             # Create a list of dictionaries representing each term
-            terms_list: List[Dict[str, Union[int, str]]] = [
-                term.to_dict() for term in terms
-            ]
-            response = jsonify(terms_list)
+            terms_list: List[Dict[str, Any]] = [term.to_dict() for term in terms]
 
-            return response, 200
+            return jsonify(terms_list), 200
 
         except Exception as e:
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
@@ -216,6 +215,43 @@ def register_routes(app: Flask, db: SQLAlchemy):
                 return jsonify({"error": f"Term with ID {tid} not found."}), 404
 
             return jsonify(term.to_dict()), 200
+
+        except Exception as e:
+            return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
+
+    @app.route("/api/terms/search", methods=["GET"])
+    @cross_origin()
+    def search_terms() -> (
+        Tuple[Response, Union[Literal[200], Literal[404], Literal[500]]]
+    ):
+        """
+        Retrieves terms that match a given search string
+        in either the english_term or french_term.
+
+        Input:  Query parameter "term" | the search string to find within english_term or french_term.
+        Output: (Response)             | a JSON response with matching Term(s) or an error message.
+        """
+        # Get the search term from the query parameters
+        search_term = request.args.get("term", "").strip().lower()
+
+        # Validate the search term
+        if not search_term:
+            return jsonify({"error": "Search term is required."}), 400
+
+        try:
+            # Query the database for terms where the english_term or french_term contains the search term
+            terms = Term.query.filter(
+                (Term.english_term.ilike(f"%{search_term}%"))
+                | (Term.french_term.ilike(f"%{search_term}%"))
+            ).all()
+
+            if not terms:
+                return jsonify({"message": "No matching terms found."}), 404
+
+            # Create a list of dictionaries representing the matched terms
+            terms_list: List[Dict[str, Any]] = [term.to_dict() for term in terms]
+
+            return jsonify(terms_list), 200
 
         except Exception as e:
             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
