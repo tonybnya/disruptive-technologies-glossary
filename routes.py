@@ -47,9 +47,10 @@ def register_routes(app: Flask, db: SQLAlchemy):
         Input:  Nothing
         Output: the template of the glossary page.
         """
-        data = Term.query.all()
-        terms = [term.to_dict() for term in data]
-        return render_template("glossary.html", terms=terms)
+        # data = Term.query.all()
+        # terms = [term.to_dict() for term in data]
+        # return render_template("glossary.html", terms=terms)
+        return render_template("glossary.html")
 
     @app.route("/dashboard")
     def dashboard() -> Tuple[Response, Literal[200]]:

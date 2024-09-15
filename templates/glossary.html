@@ -162,9 +162,5 @@
   </div>
   <p class="text-center text-sm my-5">&copy; 2024 Tous Droits Réservés.</p>
 </footer>
-<script>
-  var termsData = {{ terms | tojson | safe }};
-  console.log("termsData in HTML:", termsData);
-</script>
 <script src="{{ url_for('static', filename='js/searchTerm.js') }}"></script>
 {% endblock%}

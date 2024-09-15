@@ -1,62 +1,62 @@
-const searchInput = document.getElementById("search-input");
-const searchButton = document.getElementById("search-button");
-const resultsContainer = document.getElementById("results");
-// const API_URL = "http://127.0.0.1:5003/api/terms";
-const API_URL = "http://127.0.0.1:5003/api/terms/search";
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.getElementById("search-input");
+  const searchButton = document.getElementById("search-button");
+  const resultsContainer = document.getElementById("results");
+  // const API_URL = "http://127.0.0.1:5003/api/terms";
+  const API_URL = "http://127.0.0.1:5003/api/terms/search";
 
-const performSearch = async () => {
-  const searchTerm = searchInput.value.trim().toLowerCase();
-  if (!searchInput || searchTerm === "") {
-    alert("Veuillez entrer un terme pour effectuer une recherche.");
-    return;
-  }
-
-  try {
-    // const response = await fetch(API_URL, {
-    const response = await fetch(`${API_URL}?term=${searchTerm}`, {
-      headers: {
-        accept: "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Quelque chose n'a pas marché");
+  const performSearch = async () => {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    if (!searchInput || searchTerm === "") {
+      alert("Veuillez entrer un terme pour effectuer une recherche.");
+      return;
     }
 
-    const data = await response.json();
-    console.log(data);
+    try {
+      // const response = await fetch(API_URL, {
+      const response = await fetch(`${API_URL}?term=${searchTerm}`, {
+        headers: {
+          accept: "application/json",
+        },
+      });
 
-    // const filteredResults = termsData.filter(
-    const filteredResults = data.filter(
-      (item) =>
-        item.french_term.toLowerCase().includes(searchTerm) ||
-        item.english_term.toLowerCase().includes(searchTerm),
-    );
+      if (!response.ok) {
+        throw new Error("Quelque chose n'a pas marché");
+      }
 
-    displayResults(filteredResults);
-  } catch (error) {
-    alert("Vérifiez l'orthographe du terme et Réessayez !");
-    console.error("Error fetching data:", error);
-    resultsContainer.innerHTML = `<p>Erreur. Veuillez réessayer.</p>`;
-  }
-};
+      const data = await response.json();
+      // console.log(data);
 
-searchButton.addEventListener("click", performSearch);
-searchInput.addEventListener("keypress", function (e) {
-  if (e.key === "Enter") {
-    performSearch();
-  }
-});
+      const filteredResults = data.filter(
+        (item) =>
+          item.french_term.toLowerCase().includes(searchTerm) ||
+          item.english_term.toLowerCase().includes(searchTerm),
+      );
 
-const displayResults = (results) => {
-  if (results.length === 0) {
-    resultsContainer.innerHTML = "<p>Aucun résultat trouvé.</p>";
-    return;
-  }
+      displayResults(filteredResults);
+    } catch (error) {
+      alert("Vérifiez l'orthographe du terme et Réessayez !");
+      console.error("Error fetching data:", error);
+      resultsContainer.innerHTML = `<p>Erreur. Veuillez réessayer.</p>`;
+    }
+  };
 
-  resultsContainer.innerHTML = results
-    .map(
-      (item) => `
+  searchButton.addEventListener("click", performSearch);
+  searchInput.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+      performSearch();
+    }
+  });
+
+  const displayResults = (results) => {
+    if (results.length === 0) {
+      resultsContainer.innerHTML = "<p>Aucun résultat trouvé.</p>";
+      return;
+    }
+
+    resultsContainer.innerHTML = results
+      .map(
+        (item) => `
 <div class="bg-white shadow-lg rounded-lg mb-4 p-4 sm:p-6 h-full max-w-full">
   <div class="flex flex-col items-start gap-1 mb-4">
     <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
@@ -151,32 +151,32 @@ const displayResults = (results) => {
   </div>
 </div>
 `,
-    )
-    .join("");
+      )
+      .join("");
 
-  document.getElementById("search-input").value = "";
-};
+    document.getElementById("search-input").value = "";
+  };
 
-const displaySubdomains = (label, subdomains) => {
-  const colors = [
-    { text: "text-white", bg: "bg-[#296F9A]" },
-    { text: "text-white", bg: "bg-[#A32A34]" },
-    { text: "text-white", bg: "bg-black" },
-  ];
+  const displaySubdomains = (label, subdomains) => {
+    const colors = [
+      { text: "text-white", bg: "bg-[#296F9A]" },
+      { text: "text-white", bg: "bg-[#A32A34]" },
+      { text: "text-white", bg: "bg-black" },
+    ];
 
-  return subdomains
-    .map((item, index) => {
-      const color = colors[index % colors.length];
-      return `
+    return subdomains
+      .map((item, index) => {
+        const color = colors[index % colors.length];
+        return `
         <span class="inline-block ${color.bg} ${color.text} py-1 px-2 mr-1 mb-2 rounded-lg text-sm">${item}</span>
       `;
-    })
-    .join("");
-};
+      })
+      .join("");
+  };
 
-const displayIfExists = (label, value) => {
-  if (value && value.trim() !== "") {
-    return `
+  const displayIfExists = (label, value) => {
+    if (value && value.trim() !== "") {
+      return `
       <li class="py-3 sm:py-4">
         <div class="flex items-center space-x-4">
           <div class="flex-1 min-w-0">
@@ -185,71 +185,72 @@ const displayIfExists = (label, value) => {
           </div>
         </div>
       </li>`;
-  }
-  return "";
-};
-
-const displayField = (label, field) => {
-  if (Array.isArray(field) && field.length > 0) {
-    const formattedItems = field
-      .map((item) => `<span class="mb-0 text-sm">${item || "<br />"}</span>`)
-      .join("");
-
-    return `
-      <li class="py-3 sm:py-4">
-        <div class="flex items-center space-x-4">
-          <div class="flex flex-col min-w-0">
-            <p class="text-lg text-[#296F9A] font-bold">${label}</p>
-            ${formattedItems}
-          </div>
-        </div>
-      </li>
-    `;
-  }
-  return "";
-};
-
-const displayCooccurrenceIfExists = (label, cooccurrence) => {
-  if (Array.isArray(cooccurrence) && cooccurrence.length > 0) {
-    const formattedItems = cooccurrence
-      .map((item) => `<span class="mb-0 text-sm">${item || "<br />"}</span>`)
-      .join("");
-
-    return `
-      <li class="py-3 sm:py-4">
-        <div class="flex items-center space-x-4">
-          <div class="flex flex-col min-w-0">
-            <p class="text-lg text-[#296F9A] font-bold">${label}</p>
-            ${formattedItems}
-          </div>
-        </div>
-      </li>
-    `;
-  }
-  return "";
-};
-
-const displayLexicalRelations = (lexicalRelations) => {
-  let html =
-    '<table class="table-auto text-sm w-full text-left whitespace-normal">';
-
-  lexicalRelations.forEach((relation) => {
-    const key = Object.keys(relation)[0];
-    const values = relation[key];
-    html += `<tr>`;
-    html += `<th class="pl-0 py-2 font-bold">${key}</th>`;
-    html += `<td class="pl-0 py-2 text-sm">`;
-    if (Array.isArray(values)) {
-      html += values.join("<br>");
-    } else if (values) {
-      html += values;
-    } else {
-      html += "";
     }
-    html += `</td>`;
-    html += `</tr>`;
-  });
+    return "";
+  };
 
-  html += "</table>";
-  return html;
-};
+  const displayField = (label, field) => {
+    if (Array.isArray(field) && field.length > 0) {
+      const formattedItems = field
+        .map((item) => `<span class="mb-0 text-sm">${item || "<br />"}</span>`)
+        .join("");
+
+      return `
+      <li class="py-3 sm:py-4">
+        <div class="flex items-center space-x-4">
+          <div class="flex flex-col min-w-0">
+            <p class="text-lg text-[#296F9A] font-bold">${label}</p>
+            ${formattedItems}
+          </div>
+        </div>
+      </li>
+    `;
+    }
+    return "";
+  };
+
+  const displayCooccurrenceIfExists = (label, cooccurrence) => {
+    if (Array.isArray(cooccurrence) && cooccurrence.length > 0) {
+      const formattedItems = cooccurrence
+        .map((item) => `<span class="mb-0 text-sm">${item || "<br />"}</span>`)
+        .join("");
+
+      return `
+      <li class="py-3 sm:py-4">
+        <div class="flex items-center space-x-4">
+          <div class="flex flex-col min-w-0">
+            <p class="text-lg text-[#296F9A] font-bold">${label}</p>
+            ${formattedItems}
+          </div>
+        </div>
+      </li>
+    `;
+    }
+    return "";
+  };
+
+  const displayLexicalRelations = (lexicalRelations) => {
+    let html =
+      '<table class="table-auto text-sm w-full text-left whitespace-normal">';
+
+    lexicalRelations.forEach((relation) => {
+      const key = Object.keys(relation)[0];
+      const values = relation[key];
+      html += `<tr>`;
+      html += `<th class="pl-0 py-2 font-bold">${key}</th>`;
+      html += `<td class="pl-0 py-2 text-sm">`;
+      if (Array.isArray(values)) {
+        html += values.join("<br>");
+      } else if (values) {
+        html += values;
+      } else {
+        html += "";
+      }
+      html += `</td>`;
+      html += `</tr>`;
+    });
+
+    html += "</table>";
+    return html;
+  };
+});
