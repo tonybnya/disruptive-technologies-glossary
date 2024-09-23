@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
     resultsContainer.innerHTML = results
       .map(
         (item) => `
-  <div class="bg-white shadow-lg rounded-lg mb-4 p-2 sm:p-4 h-full w-full">
+  <div class="bg-white shadow-lg rounded-lg mb-4 p-2 sm:p-4 h-full">
     <div class="flex flex-col items-start gap-1 mb-4">
       <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
         <span class="text-[#A32A34] font-bold">${formater(item.english_term)}</span>
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
   </div>
   <!---->
-  <div class="bg-white shadow-lg rounded-lg mb-4 p-2 sm:p-4 h-full w-full">
+  <div class="bg-white shadow-lg rounded-lg mb-4 p-2 sm:p-4 h-full">
     <div class="flex flex-col items-start gap-1 mb-4">
       <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
         <span class="text-[#A32A34] font-bold">${formater(item.french_term)}</span>
