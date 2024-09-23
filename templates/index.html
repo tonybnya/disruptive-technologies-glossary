@@ -35,6 +35,7 @@ Intelligence Artificielle | DTechGloss {% endblock %} {% block content %}
   </header>
 
   <section
+    id="hero"
     class="text-white dark:bg-gray-900 max-sm:text-center md:text-center xl:text-left"
   >
     <div
@@ -222,7 +223,7 @@ Intelligence Artificielle | DTechGloss {% endblock %} {% block content %}
       <ul class="flex items-center flex-wrap mb-6 md:mb-0">
         <li>
           <a href="#" class="text-sm font-normal hover:underline mr-4 md:mr-6"
-            >Termes & Conditions</a
+            >Termes &amp; Conditions</a
           >
         </li>
         <li>
@@ -231,12 +232,19 @@ Intelligence Artificielle | DTechGloss {% endblock %} {% block content %}
           >
         </li>
         <li>
-          <a href="#" class="text-sm font-normal hover:underline mr-4 md:mr-6"
+          <a
+            href="#hero"
+            class="text-sm font-normal hover:underline mr-4 md:mr-6"
             >Accueil</a
           >
         </li>
         <li>
-          <a href="#" class="text-sm font-normal hover:underline">Contact</a>
+          <a
+            href="/contact"
+            target="_blank"
+            class="text-sm font-normal hover:underline"
+            >Contact</a
+          >
         </li>
       </ul>
       <div class="flex sm:justify-center space-x-6">

@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const displaySubdomains = (label, subdomains) => {
     const colors = [
-      { text: "text-white", bg: "bg-[#296F9A]" },
+      { text: "text-white", bg: "bg-[#194B6B]" },
       { text: "text-white", bg: "bg-[#A32A34]" },
       { text: "text-white", bg: "bg-black" },
     ];
