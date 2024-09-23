@@ -7,8 +7,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const formater = (text) => {
     return text
-      .replace(/\[i\](.*?)\[\/i\]/g, '<i>$1</i>')
-      .replace(/\{sub\}(.*?)\{\/sub\}/g, '<sub>$1</sub>');
+      // .replace(/\[i\](.*?)\[\/i\]/g, '<em>$1</em>')
+      // .replace(/\{sub\}(.*?)\{\/sub\}/g, '<sub>$1</sub>');
+      .replace(/\[i\](.*?)\[i\]/g, '<em>$1</em>')
+      .replace(/\{sub\}(.*?)\{sub\}/g, '<sub>$1</sub>');
   };
 
   const performSearch = async () => {
@@ -43,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (error) {
       alert("Vérifiez l'orthographe du terme et Réessayez !");
       console.error("Error fetching data:", error);
-      resultsContainer.innerHTML = `<p class="text-center">Erreur. Veuillez réessayer.</p>`;
+      resultsContainer.innerHTML = `<p class="text-center">Erreur! Veuillez réessayer.</p>`;
     }
   };
 
@@ -198,26 +200,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const displayField = (label, field) => {
     if (Array.isArray(field) && field.length > 0) {
       const formattedItems = field
-        .map((item) => `<span class="mb-0 text-sm">${item || "<br />"}</span>`)
-        .join("");
-
-      return `
-      <li class="py-3 sm:py-4">
-        <div class="flex items-center space-x-4">
-          <div class="flex flex-col min-w-0">
-            <p class="text-lg text-[#296F9A] font-bold">${label}</p>
-            ${formattedItems}
-          </div>
-        </div>
-      </li>
-    `;
-    }
-    return "";
-  };
-
-  const displayCooccurrenceIfExists = (label, cooccurrence) => {
-    if (Array.isArray(cooccurrence) && cooccurrence.length > 0) {
-      const formattedItems = cooccurrence
         .map((item) => `<span class="mb-0 text-sm">${item || "<br />"}</span>`)
         .join("");
 
