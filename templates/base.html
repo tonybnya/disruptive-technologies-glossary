@@ -12,6 +12,7 @@
       href="{{url_for('static',filename='css/output.css')}}"
       rel="stylesheet"
     />
+    <link href="./output.css" rel="stylesheet" />
     <title>
       {% block title %}Glossaire Big Data - Blockchain - Intelligence
       Artificielle | DTechGloss{% endblock %}
@@ -29,8 +30,8 @@
       }
     </style>
   </head>
-  <body class="bg-gray-100">
-    {% block content %} {% endblock %}
+  <body class="bg-gray-50">
+    <main class="overflow-hidden">{% block content %} {% endblock %}</main>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script src="https://demo.themesberg.com/windster/app.bundle.js"></script>
     <script src="js/searchTerm.js"></script>

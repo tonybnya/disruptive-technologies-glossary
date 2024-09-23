@@ -4,7 +4,7 @@
     "buildcss": "npx tailwindcss -i ./static/css/input.css -o ./static/css/output.css --watch"
   },
   "devDependencies": {
-    "tailwindcss": "^3.4.10"
+    "tailwindcss": "^3.4.13"
   },
   "dependencies": {
     "flowbite": "^2.5.1"

@@ -2,8 +2,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("search-input");
   const searchButton = document.getElementById("search-button");
   const resultsContainer = document.getElementById("results");
-  // const API_URL = "http://127.0.0.1:5003/api/terms";
   const API_URL = "http://127.0.0.1:5003/api/terms/search";
+  // const API_URL = "http://127.0.0.1:5003/api/terms";
+
+  const formater = (text) => {
+    return text
+      .replace(/\[i\](.*?)\[\/i\]/g, '<i>$1</i>')
+      .replace(/\{sub\}(.*?)\{\/sub\}/g, '<sub>$1</sub>');
+  };
 
   const performSearch = async () => {
     const searchTerm = searchInput.value.trim().toLowerCase();
@@ -37,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (error) {
       alert("Vérifiez l'orthographe du terme et Réessayez !");
       console.error("Error fetching data:", error);
-      resultsContainer.innerHTML = `<p>Erreur. Veuillez réessayer.</p>`;
+      resultsContainer.innerHTML = `<p class="text-center">Erreur. Veuillez réessayer.</p>`;
     }
   };
 
@@ -53,109 +59,109 @@ document.addEventListener("DOMContentLoaded", function () {
       resultsContainer.innerHTML = "<p>Aucun résultat trouvé.</p>";
       return;
     }
-
+  
     resultsContainer.innerHTML = results
       .map(
         (item) => `
-<div class="bg-white shadow-lg rounded-lg mb-4 p-4 sm:p-6 h-full max-w-full">
-  <div class="flex flex-col items-start gap-1 mb-4">
-    <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
-      <span class="text-[#A32A34] font-bold">${item.english_term}</span>
-    </h3>
-    <h4 class="text-gray-700">
-      <span class="text-[#296F9A] font-bold">SL</span>: ${item.semantic_label_en}
-    </h4>
-    <h4 class="text-gray-700">
-      Domain:
-      <span class="text-[#296F9A] font-bold">${item.domain_en}</span>
-    </h4>
-    <h4 class="text-gray-700">
-      Subdomain:
-      ${displaySubdomains("Sous-domaine", item.subdomains_en)}
-    </h4>
-  </div>
-  <div class="flow-root">
-    <ul role="list" class="divide-y divide-gray-200">
-      ${displayIfExists("Variant", item.variant_en)}
-      ${displayIfExists("Synonym", item.near_synonym_en)}
-      ${displayIfExists("Definition", item.definition_en)}
-      ${displayField("Syntactic Cooccurrence", item.syntactic_cooccurrence_en)}
-      <li class="py-3 sm:py-4">
-        <div class="flex items-center space-x-4">
-          <div class="flex-1 min-w-0">
-            <p class="text-lg text-[#296F9A] font-bold">Lexical Relations</p>
-            ${displayLexicalRelations(item.lexical_relations_en)}
+  <div class="bg-white shadow-lg rounded-lg mb-4 p-2 sm:p-4 h-full w-full">
+    <div class="flex flex-col items-start gap-1 mb-4">
+      <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
+        <span class="text-[#A32A34] font-bold">${formater(item.english_term)}</span>
+      </h3>
+      <h4 class="text-gray-700">
+        <span class="text-[#296F9A] font-bold">SL</span>: ${item.semantic_label_en}
+      </h4>
+      <h4 class="text-gray-700">
+        Domain:
+        <span class="text-[#296F9A] font-bold">${item.domain_en}</span>
+      </h4>
+      <h4 class="text-gray-700">
+        Subdomain:
+        ${displaySubdomains("Sous-domaine", item.subdomains_en)}
+      </h4>
+    </div>
+    <div class="flow-root">
+      <ul role="list" class="divide-y divide-gray-200">
+        ${displayIfExists("Variant", formater(item.variant_en))}
+        ${displayIfExists("Synonym", formater(item.near_synonym_en))}
+        ${displayIfExists("Definition", formater(item.definition_en))}
+        ${displayField("Syntactic Cooccurrence", item.syntactic_cooccurrence_en)}
+        <li class="py-3 sm:py-4">
+          <div class="flex items-center space-x-4">
+            <div class="flex-1 min-w-0">
+              <p class="text-lg text-[#296F9A] font-bold">Lexical Relations</p>
+              ${displayLexicalRelations(item.lexical_relations_en)}
+            </div>
           </div>
-        </div>
-      </li>
-      ${displayIfExists("Note", item.note_en)}
-      ${displayField("Not to be confused with", item.note_to_be_confused_with_en)}
-      ${displayField("Frequent Expression", item.frequent_expression_en)}
-      ${displayIfExists("Phraseology", item.phraseology_en)}
-      <li class="pt-3 sm:pt-4 pb-0">
-        <div class="flex items-center space-x-4">
-          <div class="flex-1 min-w-0">
-            <p class="text-lg text-[#296F9A] font-bold">Context</p>
-            <p class="text-md font-medium text-gray-900">${item.context_en}</p>
+        </li>
+        ${displayIfExists("Note", formater(item.note_en))}
+        ${displayField("Not to be confused with", item.note_to_be_confused_with_en)}
+        ${displayField("Frequent Expression", item.frequent_expression_en)}
+        ${displayIfExists("Phraseology", formater(item.phraseology_en))}
+        <li class="pt-3 sm:pt-4 pb-0">
+          <div class="flex items-center space-x-4">
+            <div class="flex-1 min-w-0">
+              <p class="text-lg text-[#296F9A] font-bold">Context</p>
+              <p class="text-md font-medium text-gray-900">${formater(item.context_en)}</p>
+            </div>
           </div>
-        </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </div>
   </div>
-</div>
-<!---->
-<div class="bg-white shadow-lg rounded-lg mb-4 p-4 sm:p-6 h-full">
-  <div class="flex flex-col items-start gap-1 mb-4">
-    <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
-      <span class="text-[#A32A34] font-bold">${item.french_term}</span>
-    </h3>
-    <h4 class="text-gray-700">
-      <span class="text-[#296F9A] font-bold">ES</span>: ${item.semantic_label_fr}
-    </h4>
-    <h4 class="text-gray-700">
-      Domaine :
-      <span class="text-[#296F9A] font-bold">${item.domain_fr}</span>
-    </h4>
-    <h4 class="">
-      Sous-domaine :
-      ${displaySubdomains("Sous-domaine", item.subdomains_fr)}
-    </h4>
-  </div>
-  <div class="flow-root">
-    <ul role="list" class="divide-y divide-gray-200">
-      ${displayIfExists("Variante", item.variant_fr)}
-      ${displayIfExists("Synonyme", item.near_synonym_fr)}
-      ${displayIfExists("Définition", item.definition_fr)}
-      ${displayField("Cooccurrence Syntaxique", item.syntactic_cooccurrence_fr)}
-      <li class="py-3 sm:py-4">
-        <div class="flex items-center space-x-4">
-          <div class="flex-1 min-w-0">
-            <p class="text-lg text-[#296F9A] font-bold">Relations lexicales</p>
-            ${displayLexicalRelations(item.lexical_relations_fr)}
+  <!---->
+  <div class="bg-white shadow-lg rounded-lg mb-4 p-2 sm:p-4 h-full w-full">
+    <div class="flex flex-col items-start gap-1 mb-4">
+      <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
+        <span class="text-[#A32A34] font-bold">${formater(item.french_term)}</span>
+      </h3>
+      <h4 class="text-gray-700">
+        <span class="text-[#296F9A] font-bold">ES</span>: ${item.semantic_label_fr}
+      </h4>
+      <h4 class="text-gray-700">
+        Domaine :
+        <span class="text-[#296F9A] font-bold">${item.domain_fr}</span>
+      </h4>
+      <h4 class="">
+        Sous-domaine :
+        ${displaySubdomains("Sous-domaine", item.subdomains_fr)}
+      </h4>
+    </div>
+    <div class="flow-root">
+      <ul role="list" class="divide-y divide-gray-200">
+        ${displayIfExists("Variante", formater(item.variant_fr))}
+        ${displayIfExists("Synonyme", formater(item.near_synonym_fr))}
+        ${displayIfExists("Définition", formater(item.definition_fr))}
+        ${displayField("Cooccurrence Syntaxique", item.syntactic_cooccurrence_fr)}
+        <li class="py-3 sm:py-4">
+          <div class="flex items-center space-x-4">
+            <div class="flex-1 min-w-0">
+              <p class="text-lg text-[#296F9A] font-bold">Relations lexicales</p>
+              ${displayLexicalRelations(item.lexical_relations_fr)}
+            </div>
           </div>
-        </div>
-      </li>
-      ${displayIfExists("Note", item.note_fr)}
-      ${displayField("À ne pas confondre avec", item.note_to_be_confused_with_fr)}
-      ${displayField("Expression fréquente", item.frequent_expression_fr)}
-      ${displayIfExists("Phraséologie", item.phraseology_fr)}
-      <li class="pt-3 sm:pt-4 pb-0">
-        <div class="flex items-center space-x-4">
-          <div class="flex-1 min-w-0">
-            <p class="text-lg text-[#296F9A] font-bold">Contexte</p>
-            <p class="text-md font-medium text-gray-900">${item.context_fr}</p>
+        </li>
+        ${displayIfExists("Note", formater(item.note_fr))}
+        ${displayField("À ne pas confondre avec", item.note_to_be_confused_with_fr)}
+        ${displayField("Expression fréquente", item.frequent_expression_fr)}
+        ${displayIfExists("Phraséologie", formater(item.phraseology_fr))}
+        <li class="pt-3 sm:pt-4 pb-0">
+          <div class="flex items-center space-x-4">
+            <div class="flex-1 min-w-0">
+              <p class="text-lg text-[#296F9A] font-bold">Contexte</p>
+              <p class="text-md font-medium text-gray-900">${formater(item.context_fr)}</p>
+            </div>
           </div>
-        </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </div>
   </div>
-</div>
-`,
+  `,
       )
       .join("");
-
+  
     document.getElementById("search-input").value = "";
-  };
+  };  
 
   const displaySubdomains = (label, subdomains) => {
     const colors = [
