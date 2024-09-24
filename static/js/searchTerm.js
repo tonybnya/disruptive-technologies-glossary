@@ -7,10 +7,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const formater = (text) => {
     return text
-      // .replace(/\[i\](.*?)\[\/i\]/g, '<em>$1</em>')
-      // .replace(/\{sub\}(.*?)\{\/sub\}/g, '<sub>$1</sub>');
-      .replace(/\[i\](.*?)\[i\]/g, '<em>$1</em>')
-      .replace(/\{sub\}(.*?)\{sub\}/g, '<sub>$1</sub>');
+      .replace(/\<em\>(.*?)\<\/em\>/g, '<em>$1</em>')
+      .replace(/\<sub\>(.*?)\<\/sub\>/g, '<sub>$1</sub>')
+      .replace(/\<u\>(.*?)\<\/u\>/g, '<span class="underline">$1</span>')
+      .replace(/\<ms\>(.*?)\<\/ms\>/g, '<span class="font-mono">$1</span>')
+      .replace(/\<lt\>(.*?)\<\/lt\>/g, '<span class="line-through">$1</span>')
+      .replace(/\<b\>(.*?)\<\/b\>/g, '<strong>$1</strong>');
   };
 
   const performSearch = async () => {
@@ -33,7 +35,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       const data = await response.json();
-      // console.log(data);
 
       const filteredResults = data.filter(
         (item) =>
@@ -70,8 +71,8 @@ document.addEventListener("DOMContentLoaded", function () {
       <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
         <span class="text-[#A32A34] font-bold">${formater(item.english_term)}</span>
       </h3>
-      <h4 class="text-gray-700">
-        <span class="text-[#296F9A] font-bold">SL</span>: ${item.semantic_label_en}
+      <h4 class="text-gray-700 font-normal">
+        <span class="text-[#296F9A]">SL</span>: ${item.semantic_label_en}
       </h4>
       <h4 class="text-gray-700">
         Domain:
@@ -104,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
           <div class="flex items-center space-x-4">
             <div class="flex-1 min-w-0">
               <p class="text-lg text-[#296F9A] font-bold">Context</p>
-              <p class="text-md font-medium text-gray-900">${formater(item.context_en)}</p>
+              <p class="text-sm font-normal text-gray-900">${formater(item.context_en)}</p>
             </div>
           </div>
         </li>
@@ -117,8 +118,8 @@ document.addEventListener("DOMContentLoaded", function () {
       <h3 class="text-xl max-sm:text-lg font-bold leading-none text-gray-500">
         <span class="text-[#A32A34] font-bold">${formater(item.french_term)}</span>
       </h3>
-      <h4 class="text-gray-700">
-        <span class="text-[#296F9A] font-bold">ES</span>: ${item.semantic_label_fr}
+      <h4 class="text-gray-700 font-normal">
+        <span class="text-[#296F9A]">ES</span>: ${item.semantic_label_fr}
       </h4>
       <h4 class="text-gray-700">
         Domaine :
@@ -151,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
           <div class="flex items-center space-x-4">
             <div class="flex-1 min-w-0">
               <p class="text-lg text-[#296F9A] font-bold">Contexte</p>
-              <p class="text-md font-medium text-gray-900">${formater(item.context_fr)}</p>
+              <p class="text-sm font-normal text-gray-900">${formater(item.context_fr)}</p>
             </div>
           </div>
         </li>
@@ -189,7 +190,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="flex items-center space-x-4">
           <div class="flex-1 min-w-0">
             <p class="text-lg text-[#296F9A] font-bold">${label}</p>
-            <p class="text-sm font-medium text-gray-900">${value}</p>
+            <p class="text-sm font-normal text-gray-900">${value}</p>
           </div>
         </div>
       </li>`;
@@ -200,7 +201,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const displayField = (label, field) => {
     if (Array.isArray(field) && field.length > 0) {
       const formattedItems = field
-        .map((item) => `<span class="mb-0 text-sm">${item || "<br />"}</span>`)
+        .map((item) => `<span class="mb-0 text-sm">${formater(item) || "<br />"}</span>`)
         .join("");
 
       return `
@@ -225,12 +226,12 @@ document.addEventListener("DOMContentLoaded", function () {
       const key = Object.keys(relation)[0];
       const values = relation[key];
       html += `<tr>`;
-      html += `<th class="pl-0 py-2 font-bold">${key}</th>`;
+      html += `<th class="pl-0 py-2 text-sm font-normal">${formater(key)}</th>`;
       html += `<td class="pl-0 py-2 text-sm">`;
       if (Array.isArray(values)) {
-        html += values.join("<br>");
+        html += values.map((value) => formater(value)).join("<br>");
       } else if (values) {
-        html += values;
+        html += formater(values);
       } else {
         html += "";
       }

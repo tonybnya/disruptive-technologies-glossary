@@ -7,6 +7,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+results.html
+search.js
+animate.js
+
 # Virtual environment
 .venv
 venv
