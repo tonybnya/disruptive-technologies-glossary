@@ -31,6 +31,9 @@ def create_app() -> Flask:
     # Define a string for the SQLite database
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./instance/glossary.db"
 
+    # Set a secret key for session management
+    app.config["SECRET_KEY"] = "DTECHGLOSS@2024"  # Change this to a random string
+
     # Initialize CORS
     CORS(app)
 
