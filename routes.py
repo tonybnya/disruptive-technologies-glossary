@@ -7,6 +7,8 @@ from __future__ import annotations
 from typing import Any, Dict, List, Literal, Tuple, Union
 
 from flask import Flask, Response, jsonify, render_template, request
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 from flask_cors import cross_origin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
@@ -16,8 +18,15 @@ from models import Term
 
 def register_routes(app: Flask, db: SQLAlchemy):
     """
-    Define and register the routes/endpoints of the API.
+    Define and register the routes/endpoints of the API,
+    including the Flask-Admin interface.
     """
+    # Initialize Flask-Admin
+    admin = Admin(app, name="Panel d'Administation", template_mode='bootstrap4')
+
+    # Add a view for the Term model
+    admin.add_view(ModelView(Term, db.session))
+
 
     @app.route("/")
     def index() -> Tuple[Response, Literal[200]]:

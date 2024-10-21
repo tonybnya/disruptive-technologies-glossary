@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const performSearch = async () => {
     const searchTerm = searchInput.value.trim().toLowerCase();
     if (!searchInput || searchTerm === "") {
-      alert("Veuillez entrer un terme pour effectuer une recherche.");
+      // alert("Veuillez entrer un terme pour effectuer une recherche.");
       return;
     }
 
@@ -44,9 +44,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
       displayResults(filteredResults);
     } catch (error) {
-      alert("Vérifiez l'orthographe du terme et Réessayez !");
+      // alert("Vérifiez l'orthographe du terme et Réessayez !");
       console.error("Error fetching data:", error);
-      resultsContainer.innerHTML = `<p class="text-center">Erreur! Veuillez réessayer.</p>`;
+      resultsContainer.innerHTML = `<p class="text-center">Vérifiez l'orthographe du terme et Réessayez !</p>`;
+      // resultsContainer.innerHTML = `<p class="text-center">Erreur! Veuillez réessayer.</p>`;
     }
   };
 

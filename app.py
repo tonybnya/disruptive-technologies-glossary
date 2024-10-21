@@ -29,7 +29,7 @@ def create_app() -> Flask:
     )
 
     # Define a string for the SQLite database
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./glossary.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./instance/glossary.db"
 
     # Initialize CORS
     CORS(app)
