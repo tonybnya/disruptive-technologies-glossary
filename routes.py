@@ -22,7 +22,7 @@ def register_routes(app: Flask, db: SQLAlchemy):
     including the Flask-Admin interface.
     """
     # Initialize Flask-Admin
-    admin = Admin(app, name="Panel d'Administation", template_mode='bootstrap4')
+    admin = Admin(app, name="Admin Panel", template_mode='bootstrap4')
 
     # Add a view for the Term model
     admin.add_view(ModelView(Term, db.session))
