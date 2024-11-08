@@ -2399,6 +2399,21 @@ input:checked + .toggle-bg {
     margin-right: 3rem;
   }
 
+  .lg\:mx-10 {
+    margin-left: 2.5rem;
+    margin-right: 2.5rem;
+  }
+
+  .lg\:mx-8 {
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+
+  .lg\:mx-4 {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
   .lg\:mb-8 {
     margin-bottom: 2rem;
   }
@@ -2453,6 +2468,11 @@ input:checked + .toggle-bg {
   .lg\:py-16 {
     padding-top: 4rem;
     padding-bottom: 4rem;
+  }
+
+  .lg\:px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
   .lg\:pl-3 {
